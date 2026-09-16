@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Three-Link Motion Tracking Arm — Gavin Bayley</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<header>
+  <nav class="wrap">
+    <a class="brand" href="../index.html#top">Gavin Bayley</a>
+    <div class="navlinks">
+      <a href="../index.html#research">Research</a>
+      <a href="../index.html#projects">Projects</a>
+      <a href="../index.html#skills">Skills</a>
+      <a href="../index.html#contact">Contact</a>
+    </div>
+  </nav>
+</header>
+
+<div class="wrap">
+  <a class="back-link" href="../index.html#projects">← Back to portfolio</a>
+
+  <div class="detail-head">
+    <h1>Three-Link Motion Tracking Arm</h1>
+    <div class="meta">Jan. 2026</div>
+    <div class="tags">
+      <span class="tag">Fusion 360</span><span class="tag">C++</span><span class="tag">Python</span>
+      <span class="tag">ROS 2</span><span class="tag">Sensor Fusion</span><span class="tag">3D Printing</span><span class="tag">Linux</span>
+    </div>
+  </div>
+
+  <div class="placeholder-img large">[ Hero: rendering of the complete assembly ]</div>
+
+  <div class="detail-body">
+    <p>
+      A modular, 3D-printed ball-and-socket arm designed to track the real-time location of each
+      link and end-effector.
+    </p>
+
+    <h3>Mechanical Design</h3>
+    <p>
+      The largest design challenge was ensuring constant, sufficient friction between the ball and
+      socket of each joint. Solved with a modular joint system using spring-loaded friction pads
+      to maintain constant pressure across the joint's range of motion.
+    </p>
+
+    <h3>Embedded Systems</h3>
+    <p>
+      Integrated gyroscopes, accelerometers, and magnetometers using an ESP32-S3 for real-time
+      tracking. Originally used MPU6050s and QMC magnetometers, but these proved too noisy and
+      inaccurate; replaced with an Adafruit LSM6DSOX + LIS3MDL 9DOF IMU for stable data.
+    </p>
+
+    <h3>Software Architecture</h3>
+    <p>
+      Embedded control written in C++, with a Python-based HMI and ROS&nbsp;2 handling
+      communication between the arm and the host.
+    </p>
+
+    <p>
+      As of January 2026, the physical mechanisms were 3D printed, sensors procured, and
+      elementary wiring and control software developed.
+    </p>
+
+    <h3>Gallery</h3>
+    <div class="gallery">
+      <div class="placeholder-img">[ Photograph of 3D printed skeleton ]</div>
+      <div class="placeholder-img">[ Rendering: socket link ]</div>
+      <div class="placeholder-img">[ Rendering: base + ball link ]</div>
+      <div class="placeholder-img">[ Gyro/accelerometer test setup + software demo ]</div>
+    </div>
+  </div>
+
+  <div class="detail-nav">
+    <a href="slam-robot.html">← Autonomous SLAM Robot</a>
+    <a href="fpv-quadcopter.html">FPV Quadcopter →</a>
+  </div>
+</div>
+
+<footer id="contact">
+  <p>
+    <a href="mailto:gavin.bayley@queensu.ca">gavin.bayley@queensu.ca</a>
+    &nbsp;·&nbsp; Kingston, ON / Victoria, BC
+  </p>
+</footer>
+
+</body>
+</html>

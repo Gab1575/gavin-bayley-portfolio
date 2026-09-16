@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FPV Quadcopter & Custom Controller — Gavin Bayley</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<header>
+  <nav class="wrap">
+    <a class="brand" href="../index.html#top">Gavin Bayley</a>
+    <div class="navlinks">
+      <a href="../index.html#research">Research</a>
+      <a href="../index.html#projects">Projects</a>
+      <a href="../index.html#skills">Skills</a>
+      <a href="../index.html#contact">Contact</a>
+    </div>
+  </nav>
+</header>
+
+<div class="wrap">
+  <a class="back-link" href="../index.html#projects">← Back to portfolio</a>
+
+  <div class="detail-head">
+    <h1>FPV Quadcopter &amp; Custom Controller</h1>
+    <div class="meta">Ground-up build</div>
+    <div class="tags">
+      <span class="tag">Arduino</span><span class="tag">C++</span><span class="tag">PCB Design</span>
+      <span class="tag">PID Control</span><span class="tag">RF Communication</span><span class="tag">Fusion 360</span><span class="tag">3D Printing</span>
+    </div>
+  </div>
+
+  <div class="placeholder-img large">[ Hero: rendering of completed assembly ]</div>
+
+  <div class="detail-body">
+    <p>
+      A ground-up build involving the design, fabrication, and programming of both a quadcopter
+      and its controller.
+    </p>
+
+    <h3>Design</h3>
+    <p>
+      Testing unveiled structural issues that prevented the quadcopter from functioning. A
+      3D-printed frame reinforced with aluminum beams was designed to maximize strength, which
+      solved the issue.
+    </p>
+
+    <h3>Control Algorithms</h3>
+    <p>
+      Implemented a PID + feedforward control loop in C++ for control and stability. Inexpensive
+      motors with inconsistent voltage-to-thrust ratios made tuning the PID loop take significantly
+      longer than expected.
+    </p>
+
+    <h3>Electronics</h3>
+    <p>
+      Messy wiring caused inconsistent performance, which drove the development of a custom PCB to
+      consolidate wiring and power distribution — significantly reducing weight and failure
+      points.
+    </p>
+
+    <h3>Controller</h3>
+    <p>
+      Modeled and assembled a custom handheld controller using an Arduino-based RF communication
+      protocol to interface with the drone.
+    </p>
+
+    <h3>Gallery</h3>
+    <div class="gallery">
+      <div class="placeholder-img">[ Rendering of printed components ]</div>
+      <div class="placeholder-img">[ Photograph of the quadcopter ]</div>
+      <div class="placeholder-img">[ Custom PCB ]</div>
+      <div class="placeholder-img">[ Controller rendering + photograph ]</div>
+    </div>
+  </div>
+
+  <div class="detail-nav">
+    <a href="three-link-arm.html">← Three-Link Motion Tracking Arm</a>
+    <a href="water-treatment.html">Scale Water Treatment System →</a>
+  </div>
+</div>
+
+<footer id="contact">
+  <p>
+    <a href="mailto:gavin.bayley@queensu.ca">gavin.bayley@queensu.ca</a>
+    &nbsp;·&nbsp; Kingston, ON / Victoria, BC
+  </p>
+</footer>
+
+</body>
+</html>

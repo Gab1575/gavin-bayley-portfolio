@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LLM-Driven Mental Health Companion Robot — Gavin Bayley</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<header>
+  <nav class="wrap">
+    <a class="brand" href="../index.html#top">Gavin Bayley</a>
+    <div class="navlinks">
+      <a href="../index.html#research">Research</a>
+      <a href="../index.html#projects">Projects</a>
+      <a href="../index.html#skills">Skills</a>
+      <a href="../index.html#contact">Contact</a>
+    </div>
+  </nav>
+</header>
+
+<div class="wrap">
+  <a class="back-link" href="../index.html#research">← Back to portfolio</a>
+
+  <div class="detail-head">
+    <div class="kicker">Featured Research</div>
+    <h1>LLM-Driven Mental Health Companion Robot</h1>
+    <div class="meta">Undergraduate Research Assistant, MITHRIL Lab · Ingenuity Labs Research Institute, Queen's University · Supervised by Prof. Matthew Pan · May – Aug 2026</div>
+    <div class="tags">
+      <span class="tag">ROS 2</span><span class="tag">micro-ROS</span><span class="tag">ESP32 / C++</span>
+      <span class="tag">Python</span><span class="tag">OpenCV</span><span class="tag">Fusion 360</span>
+      <span class="tag">Tkinter</span><span class="tag">Human-Robot Interaction</span>
+    </div>
+  </div>
+
+  <div class="placeholder-img large">[ Hero photo: the fully assembled flower robot ]</div>
+
+  <div class="detail-body">
+    <p>
+      Designed, fabricated, and programmed a tendon-driven, continuum-stem animatronic flower
+      robot from the ground up, serving as the physical embodiment for an LLM-driven mental
+      health companion research platform in the lab's Human-Robot Interaction research program.
+    </p>
+
+    <h3>Mechanical Design</h3>
+    <p>
+      CAD in Fusion 360, laser-cut acrylic subframes, and 3D-printed structural parts, including a
+      4-tendon continuum stem built from stacked ball-and-socket joints and a five-petal head
+      driven by its own base motor.
+    </p>
+
+    <h3>Software Architecture</h3>
+    <p>
+      Built the full ROS&nbsp;2 (Humble) host stack: a Tkinter control GUI with a live 3D
+      kinematics preview, a forward-kinematics solver mapping requested bend targets into
+      antagonistic servo commands, and a command-mux layer bridged to the robot over
+      micro-ROS/Wi-Fi.
+    </p>
+
+    <h3>Embedded Systems</h3>
+    <p>
+      Developed the ESP32 firmware (PlatformIO/C++) driving 4 servos through a PCA9685 I2C
+      controller, WS2812B petal LEDs, and an encoder-controlled base motor, with a self-healing
+      Wi-Fi/micro-ROS reconnection protocol using mDNS discovery.
+    </p>
+
+    <h3>Perception</h3>
+    <p>
+      Implemented two OpenCV-based perception nodes — HSV-segmentation ball localization and
+      RetinaFace face tracking — to lay the groundwork for closed-loop and attention-based
+      behaviors.
+    </p>
+
+    <h3>Documentation</h3>
+    <p>
+      Authored a 27-page technical handbook covering assembly, tuning, software architecture, and
+      setup/operation, so the build is fully reproducible by future lab members.
+    </p>
+
+    <h3>Gallery</h3>
+    <div class="gallery">
+      <div class="placeholder-img">[ Stem / servo assembly ]</div>
+      <div class="placeholder-img">[ Control GUI screenshot ]</div>
+      <div class="placeholder-img">[ ESP32 electronics plate ]</div>
+      <div class="placeholder-img">[ ROS 2 architecture diagram ]</div>
+    </div>
+  </div>
+
+  <div class="detail-nav">
+    <a href="dual-extruder.html">← Dual Extruder Retrofit</a>
+    <a href="slam-robot.html">Autonomous SLAM Robot →</a>
+  </div>
+</div>
+
+<footer id="contact">
+  <p>
+    <a href="mailto:gavin.bayley@queensu.ca">gavin.bayley@queensu.ca</a>
+    &nbsp;·&nbsp; Kingston, ON / Victoria, BC
+  </p>
+</footer>
+
+</body>
+</html>
