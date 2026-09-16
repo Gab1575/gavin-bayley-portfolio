@@ -1,2 +1,14 @@
 .netlify/
 node_modules/
+
+# Raw/unprocessed source photos (originals, incl. large HEIC files not web-safe).
+# Cleaned, web-ready copies live in images/<project-slug>/ and are tracked.
+images/Air Engine/
+images/Arm/
+images/Cars/
+images/Drone/
+images/Dual Extruder/
+images/Filament Recycler/
+images/Iris Diaphram/
+images/Quadropeed/
+images/Water Filer/

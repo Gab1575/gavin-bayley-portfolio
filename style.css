@@ -229,6 +229,35 @@ section:first-of-type { border-top: none; }
   margin-top: 18px;
 }
 
+/* ---------- real photos ---------- */
+.photo {
+  display: block;
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  object-fit: cover;
+  background: var(--bg-elevated);
+}
+
+.photo.hero {
+  aspect-ratio: 16 / 10;
+  margin-top: 18px;
+}
+
+.gallery .photo {
+  aspect-ratio: 4 / 3;
+  margin-top: 0;
+}
+
+.card-thumb {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  border: 1px solid var(--border);
+}
+
 /* ---------- project grid ---------- */
 .grid {
   display: grid;
