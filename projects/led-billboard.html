@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>P5 HUB75 LED Billboard — Gavin Bayley</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<header>
+  <nav class="wrap">
+    <a class="brand" href="../index.html#top">Gavin Bayley</a>
+    <div class="navlinks">
+      <a href="../index.html#research">Research</a>
+      <a href="../index.html#projects">Projects</a>
+      <a href="../index.html#skills">Skills</a>
+      <a href="../index.html#contact">Contact</a>
+    </div>
+  </nav>
+</header>
+
+<div class="wrap">
+  <a class="back-link" href="../index.html#projects">← Back to portfolio</a>
+
+  <div class="detail-head">
+    <h1>P5 HUB75 LED Billboard</h1>
+    <div class="meta">Personal Project -- 10-panel (2x5) P5 64x32 HUB75 wall, ESP32-S3-DEVKITC-1-N8R8 -- Aug. 2026 -- Present</div>
+    <div class="tags">
+      <span class="tag">ESP32-S3</span><span class="tag">C++</span><span class="tag">PlatformIO</span>
+      <span class="tag">HUB75</span><span class="tag">Custom PCB</span><span class="tag">WiFi</span>
+      <span class="tag">FreeRTOS</span><span class="tag">Signal Integrity</span>
+    </div>
+  </div>
+
+  <div class="placeholder-img large">[ Hero photo: the assembled 10-panel wall, powered on ]</div>
+
+  <div class="detail-body">
+    <p>
+      Building a 10-panel (2 wide x 5 tall) P5 HUB75 LED wall driven by a single ESP32-S3, with the
+      goal of an interactive world map whose countries and flight paths can be recolored and
+      animated live from a phone or laptop over WiFi. The project is being built in explicit stages,
+      each one verified before the next is built on top of it.
+    </p>
+
+    <h3>Signal Integrity at 10 Panels</h3>
+    <p>
+      Chaining 10 panels off one controller with no level shifter turned out to be a real
+      signal-margin problem, not a config bug: panel edges would pick up a ghosted tint from a
+      different panel's color further down the chain. Fixed by dropping the HUB75 I2S clock
+      (HZ_16M -> HZ_10M) and maxing out the library's latch-blanking window -- the two changes
+      only fully resolved it together. The README also calls out a 74HCT245 level shifter as the
+      standard fix if ghosting reappears as the chain gets longer.
+    </p>
+
+    <h3>Power Distribution</h3>
+    <p>
+      10 panels at full white/full brightness can draw 40-60A+ combined, so the wall is fed 5V/GND
+      at multiple injection points along the chain rather than from a single connector -- a single
+      injection point at that current would show up as visible brightness droop and ground-offset
+      noise on the panels furthest from the supply.
+    </p>
+
+    <h3>Custom PCB</h3>
+    <p>
+      <em>Placeholder -- I don't have details on the custom board yet. Fill in: what it does (power
+      distribution / level shifting / both?), how many panels or injection points it feeds, and
+      any design files or photos to add here.</em>
+    </p>
+
+    <h3>Wireless Control: Image &amp; GIF Upload</h3>
+    <p>
+      Built a WiFi upload server ahead of the original map-first roadmap. All image/GIF decoding
+      happens in the browser, not on the ESP32 -- Canvas 2D for static images, and a hand-written
+      GIF89a decoder (LZW decompression, disposal-method compositing, validated against Pillow
+      output before porting to JS) for animations, so the page works fully offline on the device's
+      own WiFi with no external libraries. The ESP32 only ever receives raw RGB565 pixel bytes.
+    </p>
+    <p>
+      The animation buffer lives in PSRAM (up to 6MB / ~146 frames), guarded by a FreeRTOS mutex
+      since the render loop advances animation frames on a timer while the upload handler can swap
+      or free that same buffer from a different task -- without the mutex that's a real
+      use-after-free, not just a visual glitch.
+    </p>
+
+    <h3>Status</h3>
+    <p>
+      Display bring-up and per-panel chain/rotation calibration are complete and confirmed working
+      across all 10 panels. WiFi image and GIF upload are live. The original map-specific goals --
+      country coloring and animated flight paths -- are still ahead.
+    </p>
+
+    <h3>Gallery</h3>
+    <div class="gallery">
+      <div class="placeholder-img">[ Add photo: full wall powered on ]</div>
+      <div class="placeholder-img">[ Add photo: custom PCB ]</div>
+      <div class="placeholder-img">[ Add photo: wiring / power injection points ]</div>
+      <div class="placeholder-img">[ Add screenshot: WiFi upload page ]</div>
+    </div>
+  </div>
+
+  <div class="detail-nav">
+    <a href="dual-extruder.html">← Dual Extruder Retrofit</a>
+    <a href="flower-robot.html">Mental Health Companion Robot →</a>
+  </div>
+</div>
+
+<footer id="contact">
+  <p>
+    <a href="mailto:gavin.bayley@queensu.ca">gavin.bayley@queensu.ca</a>
+    &nbsp;·&nbsp; Kingston, ON / Victoria, BC
+  </p>
+</footer>
+
+</body>
+</html>
