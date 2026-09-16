@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gavin Bayley — Portfolio</title>
+<meta name="description" content="Mechatronics & Robotics Engineering student at Queen's University. Robotics, embedded systems, and mechanical design portfolio.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <nav class="wrap">
+    <a class="brand" href="#top">Gavin Bayley</a>
+    <div class="navlinks">
+      <a href="#research">Research</a>
+      <a href="#projects">Projects</a>
+      <a href="#skills">Skills</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </nav>
+</header>
+
+<div class="wrap">
+
+  <section class="hero" id="top">
+    <div class="role">MECHATRONICS &amp; ROBOTICS ENGINEERING — QUEEN'S UNIVERSITY</div>
+    <h1>Gavin Bayley</h1>
+    <p class="lede">
+      I build robots end-to-end — mechanical design, embedded firmware, and the software stacks
+      that tie them together. Recent work spans human-robot interaction research, autonomous
+      navigation, and a long list of things I've designed, 3D printed, wired, and restored.
+    </p>
+    <div class="hero-links">
+      <a class="btn primary" href="mailto:gavin.bayley@queensu.ca">Email</a>
+      <a class="btn" href="#">GitHub <!-- TODO: add your GitHub URL --></a>
+      <a class="btn" href="#">LinkedIn <!-- TODO: add your LinkedIn URL --></a>
+      <a class="btn" href="GavinBayley_Resume_2026.pdf">Resume (PDF)</a>
+    </div>
+  </section>
+
+  <!-- ================= RESEARCH ================= -->
+  <section id="research">
+    <div class="section-head">
+      <div class="kicker">Featured Research</div>
+      <h2>LLM-Driven Mental Health Companion Robot</h2>
+    </div>
+
+    <div class="feature-card">
+      <h3>Undergraduate Research Assistant — MITHRIL Lab</h3>
+      <div class="meta">Ingenuity Labs Research Institute, Queen's University · Supervised by Prof. Matthew Pan · May – Aug 2026</div>
+
+      <p>
+        Designed, fabricated, and programmed a tendon-driven, continuum-stem animatronic flower
+        robot from the ground up, serving as the physical embodiment for an LLM-driven mental
+        health companion research platform in the lab's Human-Robot Interaction research program.
+      </p>
+
+      <ul>
+        <li><strong>Mechanical Design:</strong> CAD in Fusion 360, laser-cut acrylic subframes, and 3D-printed
+          structural parts, including a 4-tendon continuum stem with ball-and-socket joints.</li>
+        <li><strong>Software Architecture:</strong> Built the full ROS&nbsp;2 (Humble) host stack — a Tkinter
+          control GUI with a live 3D kinematics preview, a forward-kinematics solver mapping bend
+          targets to antagonistic servo commands, and a mux layer bridged to the robot over
+          micro-ROS/Wi-Fi.</li>
+        <li><strong>Embedded Systems:</strong> Developed the ESP32 firmware (PlatformIO/C++) driving 4 servos
+          through a PCA9685 I2C controller, WS2812B petal LEDs, and an encoder-controlled base
+          motor, with a self-healing Wi-Fi/micro-ROS reconnection protocol using mDNS discovery.</li>
+        <li><strong>Perception:</strong> Implemented OpenCV-based perception nodes — HSV-segmentation ball
+          localization and RetinaFace face tracking — to lay the groundwork for closed-loop and
+          attention-based behaviors.</li>
+        <li><strong>Documentation:</strong> Authored a 27-page technical handbook covering assembly, tuning,
+          software architecture, and setup/operation for lab reproducibility and handoff.</li>
+      </ul>
+
+      <div class="tags">
+        <span class="tag">ROS 2</span><span class="tag">micro-ROS</span><span class="tag">ESP32 / C++</span>
+        <span class="tag">Python</span><span class="tag">OpenCV</span><span class="tag">Fusion 360</span>
+        <span class="tag">Tkinter</span><span class="tag">Human-Robot Interaction</span>
+      </div>
+
+      <div class="placeholder-img">[ Add photos here: assembled flower robot, stem/servo assembly, GUI screenshot ]<br>Save into /images/ and reference them, e.g. &lt;img src="images/flower-1.jpg"&gt;</div>
+    </div>
+  </section>
+
+  <!-- ================= PROJECTS ================= -->
+  <section id="projects">
+    <div class="section-head">
+      <div class="kicker">Projects</div>
+      <h2>Design &amp; Build</h2>
+    </div>
+
+    <div class="grid">
+
+      <!-- Placeholder: SLAM robot -->
+      <div class="card draft">
+        <span class="badge">Draft — add details</span>
+        <h3>Autonomous Differential-Drive SLAM Robot</h3>
+        <div class="sub">2025</div>
+        <p>
+          Full write-up pending — this card is a placeholder built only from the scope you gave me.
+          Replace this paragraph with your actual project summary, key design challenges, and results.
+        </p>
+        <p><strong>Known scope:</strong> a differential-drive autonomous mobile robot with LiDAR-based
+          mapping and localization (SLAM Toolbox), path planning and navigation via Nav2, running on a
+          Raspberry Pi with a custom motor controller board, feedforward + PID control for microstepped
+          drive motors, and Foxglove for visualization and debugging.</p>
+        <div class="tags">
+          <span class="tag">ROS 2</span><span class="tag">Nav2</span><span class="tag">SLAM Toolbox</span>
+          <span class="tag">LiDAR</span><span class="tag">Raspberry Pi</span><span class="tag">Custom Motor Controller</span>
+          <span class="tag">Feedforward + PID</span><span class="tag">Microstepping</span><span class="tag">Foxglove</span>
+        </div>
+        <div class="placeholder-img">[ Add photos + your own write-up here ]</div>
+      </div>
+
+      <!-- Three Link Motion Tracking Arm -->
+      <div class="card">
+        <h3>Three-Link Motion Tracking Arm</h3>
+        <div class="sub">Jan. 2026</div>
+        <p>Modular, 3D-printed ball-and-socket arm designed to track the real-time location of each
+          link and end-effector.</p>
+        <ul>
+          <li><strong>Mechanical:</strong> Modular joint system with spring-loaded friction pads to maintain
+            constant ball-and-socket friction.</li>
+          <li><strong>Embedded Systems:</strong> Real-time tracking via ESP32-S3; switched from noisy
+            MPU6050 + QMC magnetometers to an Adafruit LSM6DSOX + LIS3MDL 9DOF IMU for stable data.</li>
+          <li><strong>Software:</strong> Embedded control in C++, Python-based HMI, ROS&nbsp;2 for communication.</li>
+        </ul>
+        <div class="tags">
+          <span class="tag">Fusion 360</span><span class="tag">C++</span><span class="tag">Python</span>
+          <span class="tag">ROS 2</span><span class="tag">Sensor Fusion</span><span class="tag">3D Printing</span><span class="tag">Linux</span>
+        </div>
+        <div class="placeholder-img">[ Add: assembly render, printed skeleton photo, IMU test setup ]</div>
+      </div>
+
+      <!-- FPV Quadcopter -->
+      <div class="card">
+        <h3>FPV Quadcopter &amp; Custom Controller</h3>
+        <div class="sub">Ground-up build</div>
+        <p>Design, fabrication, and programming of both a quadcopter and its custom RF controller.</p>
+        <ul>
+          <li><strong>Control:</strong> PID + feedforward control loop in C++; extensive tuning required due to
+            inexpensive motors with inconsistent voltage-to-thrust ratios.</li>
+          <li><strong>Electronics:</strong> Designed a custom PCB to consolidate wiring and power distribution,
+            reducing weight and failure points.</li>
+          <li><strong>Structure:</strong> 3D-printed frame reinforced with aluminum beams after initial structural failures.</li>
+          <li><strong>Controller:</strong> Custom handheld controller with Arduino-based RF communication.</li>
+        </ul>
+        <div class="tags">
+          <span class="tag">Arduino</span><span class="tag">C++</span><span class="tag">PCB Design</span>
+          <span class="tag">PID Control</span><span class="tag">RF Communication</span><span class="tag">Fusion 360</span><span class="tag">3D Printing</span>
+        </div>
+        <div class="placeholder-img">[ Add: completed assembly render, quadcopter photo, custom PCB photo ]</div>
+      </div>
+
+      <!-- Scale Water Treatment System -->
+      <div class="card">
+        <h3>Scale Water Treatment System</h3>
+        <div class="sub">Team project</div>
+        <p>Designed and fabricated a functional automated water treatment system under strict
+          material constraints and challenging team dynamics.</p>
+        <ul>
+          <li>Owned the dispensing assembly, engineered to accurately dispense 9g of aluminum sulfate
+            into a mixing tank within a 75g total filament budget.</li>
+          <li>Dispenser design was adopted as the standard example for future classes.</li>
+          <li>Produced standardized manufacturing drawings for the dispensing assembly.</li>
+          <li>Took on team leadership to keep mechanical design and reporting on track amid uneven
+            team contributions.</li>
+        </ul>
+        <div class="tags">
+          <span class="tag">SolidWorks</span><span class="tag">Technical Documentation</span>
+          <span class="tag">Rapid Prototyping</span><span class="tag">Team Leadership</span><span class="tag">3D Printing</span><span class="tag">Arduino</span>
+        </div>
+        <div class="placeholder-img">[ Add: full assembly render, dispenser drawings, final product photo ]</div>
+      </div>
+
+      <!-- Car Restoration -->
+      <div class="card">
+        <h3>Car Restoration</h3>
+        <div class="sub">2022 – 2025</div>
+        <p>Procured three cars abandoned on the oceanfront for over 30 years and restored two to
+          safe driving condition.</p>
+        <ul>
+          <li><strong>1973 Mercedes 450SL:</strong> Deciphered obsolete manuals and 50-year-old diagrams to
+            perform the needed repairs; used CAD to reverse-engineer and manufacture broken components.</li>
+          <li><strong>1976 Rolls-Royce Silver Shadow:</strong> Full mechanical restoration including a
+            complete tear-down and rebuild of the high-pressure hydraulic system used for braking and
+            active suspension.</li>
+        </ul>
+        <div class="tags">
+          <span class="tag">System Diagnostics</span><span class="tag">Electrical</span><span class="tag">Bodywork</span>
+          <span class="tag">Fusion 360</span><span class="tag">Mechanics</span><span class="tag">3D Printing</span>
+        </div>
+        <div class="placeholder-img">[ Add: restored Mercedes photo, Rolls-Royce photo, wiring/hydraulics diagrams ]</div>
+      </div>
+
+      <!-- Pneumatic Engine -->
+      <div class="card">
+        <h3>Pneumatic Engine</h3>
+        <div class="sub">Engineering 12, High School</div>
+        <p>Conceived, designed, and constructed a pneumatic engine, overcoming tight tolerances and
+          complex 3D-printed geometries.</p>
+        <ul>
+          <li>Engineered piston-crank geometry and valve timing to achieve linear-to-rotary motion transfer.</li>
+          <li>Replaced a failed elastic-band synchronization system with a gear-and-tensioner system,
+            eliminating slippage.</li>
+          <li>Iterated tolerances and incorporated copper cylinder walls and crankshaft bearings to
+            reduce internal friction.</li>
+        </ul>
+        <div class="tags">
+          <span class="tag">Kinematics</span><span class="tag">Iterative Prototyping</span>
+          <span class="tag">Tolerancing</span><span class="tag">Fusion 360</span><span class="tag">3D Printing</span>
+        </div>
+        <div class="placeholder-img">[ Add: engine render, moving assembly render, iteration photos ]</div>
+      </div>
+
+      <!-- Dual Extruder Retrofit -->
+      <div class="card">
+        <h3>Dual Extruder Retrofit</h3>
+        <div class="sub">Ender 3 Pro</div>
+        <p>Retrofitted a custom dual-extrusion print head assembly using a custom sheet-metal
+          backplate and modified firmware for multi-material 3D printing.</p>
+        <ul>
+          <li>Upgraded the mainboard for additional stepper drivers and a second hotend; configured
+            custom Marlin firmware to manage dual extrusion.</li>
+          <li>Designed a custom sheet-metal backplate to mount dual hotends within the original gantry's
+            constraints and produced drawings for external manufacturing.</li>
+          <li><strong>Trade-off:</strong> multi-material/multi-color prints worked, but the added complexity
+            reduced machine reliability -- an early lesson that shaped how I approach design trade-offs.</li>
+        </ul>
+        <div class="tags">
+          <span class="tag">Sheet Metal Design</span><span class="tag">3D Printing</span>
+          <span class="tag">Fusion 360</span><span class="tag">Calibration</span><span class="tag">Firmware</span>
+        </div>
+        <div class="placeholder-img">[ Add: extruder assembly renders, backplate drawings ]</div>
+      </div>
+
+    </div>
+
+    <!-- Additional smaller projects -->
+    <div class="section-head" style="margin-top:44px;">
+      <div class="kicker">More</div>
+      <h2>Additional Projects</h2>
+    </div>
+    <div class="mini-grid">
+      <div class="mini-card">
+        <h4>Quadrupedal Walking Robot</h4>
+        <p>12-DOF servo-actuated walking robot built as a testbed for inverse kinematics; software
+          control was never fully developed, but it pushed my SLA printing skills.</p>
+      </div>
+      <div class="mini-card">
+        <h4>Hydro Generator</h4>
+        <p>Modeled and fabricated a fluid turbine with an integrated gear reduction system that
+          successfully converted fluid flow into electrical power.</p>
+      </div>
+      <div class="mini-card">
+        <h4>Iris Diaphragm</h4>
+        <p>A class pencil-grabber challenge turned into a functional Arduino-controlled iris
+          diaphragm -- called "the most overengineered pencil grabber ever" by my robotics teacher.</p>
+      </div>
+      <div class="mini-card">
+        <h4>Filament Recycler Design</h4>
+        <p>Designed the melting stage of a filament recycler for a design club initiative.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SKILLS ================= -->
+  <section id="skills">
+    <div class="section-head">
+      <div class="kicker">Skills</div>
+      <h2>Technical Toolbox</h2>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-group">
+        <h4>Languages</h4>
+        <p>C, C++, Python, Arduino, Julia, VHDL</p>
+      </div>
+      <div class="skill-group">
+        <h4>Robotics &amp; Embedded</h4>
+        <p>ROS 2, micro-ROS, Nav2, SLAM Toolbox, ESP32/PlatformIO firmware, PCA9685/I2C, OpenCV</p>
+      </div>
+      <div class="skill-group">
+        <h4>CAD &amp; Fabrication</h4>
+        <p>Autodesk Fusion 360, SolidWorks, OnShape, 3D Printing, Laser Cutting, Sheet Metal Design</p>
+      </div>
+      <div class="skill-group">
+        <h4>Hardware &amp; Electronics</h4>
+        <p>Microcontrollers, PCB Design, Circuit Assembly, Soldering, Mechanical Diagnostics</p>
+      </div>
+      <div class="skill-group">
+        <h4>Controls</h4>
+        <p>PID, Feedforward Control, Microstepping, Sensor Fusion, Kinematics</p>
+      </div>
+      <div class="skill-group">
+        <h4>Tools</h4>
+        <p>Git, Tkinter, Foxglove Studio</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CONTACT ================= -->
+  <footer id="contact">
+    <div class="section-head">
+      <div class="kicker">Contact</div>
+      <h2>Get in touch</h2>
+    </div>
+    <p>
+      <a href="mailto:gavin.bayley@queensu.ca">gavin.bayley@queensu.ca</a>
+      &nbsp;·&nbsp; Kingston, ON / Victoria, BC
+      &nbsp;·&nbsp; <a href="#"><!-- TODO: GitHub link -->GitHub</a>
+      &nbsp;·&nbsp; <a href="#"><!-- TODO: LinkedIn link -->LinkedIn</a>
+    </p>
+  </footer>
+
+</div>
+
+</body>
+</html>
