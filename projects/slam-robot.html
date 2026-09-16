@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Autonomous Differential-Drive SLAM Robot — Gavin Bayley</title>
+<title>HERSHEY — Autonomous Mars Sample-Retrieval Rover — Gavin Bayley</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -27,46 +27,124 @@
   <a class="back-link" href="../index.html#projects">← Back to portfolio</a>
 
   <div class="detail-head">
-    <span class="badge">Draft — add details</span>
-    <h1>Autonomous Differential-Drive SLAM Robot</h1>
-    <div class="meta">2025</div>
+    <span class="badge">Add photos + your specific role</span>
+    <h1>HERSHEY — Autonomous Mars Sample-Retrieval Rover</h1>
+    <div class="meta">MREN 203 Team Design Project (Team SMORES: Sabina Siddiqui, Gavin Bayley, Nourhan Jadallah) -- Winter 2026</div>
     <div class="tags">
-      <span class="tag">ROS 2</span><span class="tag">Nav2</span><span class="tag">SLAM Toolbox</span>
-      <span class="tag">LiDAR</span><span class="tag">Raspberry Pi</span><span class="tag">Custom Motor Controller</span>
-      <span class="tag">Feedforward + PID</span><span class="tag">Microstepping</span><span class="tag">Foxglove</span>
+      <span class="tag">ROS 2 Humble</span><span class="tag">Nav2</span><span class="tag">SLAM Toolbox</span>
+      <span class="tag">LiDAR</span><span class="tag">Raspberry Pi</span><span class="tag">Arduino</span>
+      <span class="tag">Feedforward + PID</span><span class="tag">Macro-Pulsing</span><span class="tag">Foxglove</span>
     </div>
   </div>
 
-  <div class="placeholder-img large">[ Hero photo: the finished robot ]</div>
+  <div class="placeholder-img large">[ Hero photo: HERSHEY, fully assembled ]</div>
 
   <div class="detail-body">
     <p>
-      This page is a placeholder, built only from the project scope as described so far —
-      replace this paragraph with your own summary of what the robot does and why you built it.
+      A team design project for a fictional client (Up Goers Ltd.) framed around a real mission
+      concept: retrieving the sample tubes cached by the Curiosity and Perseverance rovers at Mars'
+      Three Forks depot. As Team SMORES (Sustained Mars Operations &amp; Robotic Exploration
+      Systems), we designed and built HERSHEY, a 4-wheel-drive rover meant to autonomously
+      navigate to the depot, locate sample tubes with onboard vision, and retrieve them with a
+      dedicated collection arm -- built and demonstrated as a working prototype on a Lynxmotion
+      chassis rather than flight hardware.
     </p>
 
-    <h3>Known Scope</h3>
+    <h3>System Architecture</h3>
     <p>
-      A differential-drive autonomous mobile robot with LiDAR-based mapping and localization using
-      SLAM Toolbox, path planning and navigation via Nav2, running on a Raspberry Pi with a custom
-      motor controller board, feedforward + PID control for microstepped drive motors, and
-      Foxglove for visualization and debugging.
+      HERSHEY splits compute across two layers: an Arduino Uno handles hard real-time sensor
+      reading and motor control, while a Raspberry Pi 4 runs ROS 2 Humble for SLAM, navigation, and
+      image recognition. The two communicate over a serial bridge; a Foxglove Studio HMI connects
+      wirelessly to the Pi's ROS 2 network for remote telemetry, visualization, and manual override.
     </p>
 
-    <h3>TODO — fill in</h3>
-    <ul>
-      <li>What problem was this robot solving, and what was the context (class project, personal, competition)?</li>
-      <li>Key design/engineering challenges and how you solved them (e.g. odometry drift, controller tuning, SLAM map quality).</li>
-      <li>Specifics on the custom motor controller — what it does that an off-the-shelf driver couldn't.</li>
-      <li>Results: does it navigate autonomously end-to-end? Any metrics (accuracy, speed, map quality)?</li>
-    </ul>
+    <h3>Chassis &amp; Locomotion</h3>
+    <p>
+      Built on a Lynxmotion A4WD1 kit: four fixed wheels driven by 12V DC planetary gear motors in
+      a skid-steer configuration, steered by driving the left and right sides at different
+      velocities -- feeding directly into the controller's differential-drive kinematics.
+    </p>
+
+    <h3>Motor Controller: Feedforward + PID + Macro-Pulsing</h3>
+    <p>
+      The Arduino-side motor controller takes a target linear and angular velocity and turns it
+      into left/right PWM commands through several stages: an acceleration limiter to prevent wheel
+      slip, a PID correction on yaw rate (read from a 9DOF IMU) to hold heading, and differential-drive
+      kinematics to split the corrected linear/angular targets into per-wheel speed targets using the
+      chassis track width. Each wheel then runs its own hybrid controller -- a feedforward term
+      interpolated from a calibration map of PWM-vs-speed, corrected by a PID loop closed on encoder
+      feedback (3000 ticks/revolution). Below the DC motors' stall voltage, continuous PWM can't hold
+      a speed at all, so the controller switches to <strong>macro-pulsing</strong>: driving the motor
+      at its minimum-viable PWM in short pulses whose duty cycle is scaled to the requested speed,
+      simulating a lower effective speed than continuous drive can achieve. The whole loop runs on a
+      non-blocking hardware-timer architecture at 100 Hz for motor control and 20 Hz for sensor
+      reads, rather than blocking delays.
+    </p>
+
+    <h3>Perception, SLAM &amp; Navigation</h3>
+    <p>
+      A Slamtec LiDAR publishes 2D range data to <code>/scan</code>; a URDF model of the rover
+      (built from the Robot State Publisher package) defines the physical/kinematic tree so every
+      sensor reading is correctly positioned relative to the chassis. SLAM Toolbox fuses the LiDAR
+      scans with wheel odometry and IMU data to build a 2D occupancy grid map while correcting for
+      odometry drift. On top of that, Nav2 provides global path planning (A*) and a local planner for
+      real-time obstacle avoidance, outputting target velocities that the Arduino bridge translates
+      back into serial motor commands -- closing the loop from map to motion. A Pi Cam feed processed
+      with OpenCV (trained to recognize the sample tubes' visual signature) handles final-approach
+      target detection once the rover reaches the search area.
+    </p>
+
+    <h3>Sample Collection Mechanism</h3>
+    <p>
+      A 2-DOF robotic arm mounted to the chassis tilts down up to 90 degrees to reach the ground,
+      ending in a servo-driven gripper: two 3D-printed jaws opened and closed by a pair of 20-tooth
+      spur gears turning in opposite directions. Sized against NASA's published sample-tube
+      dimensions (15-18 cm long, ~1.5 cm radius), the gripper closes to a ~23 mm radius to secure
+      the tube from its edges without needing precise centering.
+    </p>
+
+    <h3>Human-Machine Interface</h3>
+    <p>
+      Foxglove Studio connects to the Pi's ROS 2 network over WiFi to render the live SLAM map, the
+      rover's URDF model, camera feed, and hardware telemetry (wheel RPM, PID error, IMU data)
+      without adding compute load to the Pi. It also accepts mission start/target coordinates and
+      manual velocity overrides. A heartbeat timeout on the Arduino side brings the rover to a safe
+      stop automatically if it loses contact with the Pi.
+    </p>
+
+    <h3>Systems Engineering: Regulatory &amp; Cost Framing</h3>
+    <p>
+      Beyond the robot itself, the project scoped HERSHEY against real constraints a Mars mission
+      would face: the 1967 Outer Space Treaty and NASA planetary-protection rules for forward/backward
+      contamination, alignment with UN Sustainable Development Goals #12 and #13, NASA's hardware
+      quality-assurance lifecycle requirements, and a cost-benefit comparison between the prototype's
+      off-the-shelf components (Arduino, RPLIDAR, SHARP sensors) and their flight-grade equivalents
+      (radiation-hardened processors, fiber-optic IMUs, spectrometer-based sensing).
+    </p>
+
+    <h3>Custom PCB</h3>
+    <p>
+      <em>Placeholder -- the Arduino communicates with a dedicated "sample collection breakout
+      board" alongside the motor driver, per the design docs, but I don't have specifics on what's
+      on it. Fill in: what the board does, what it carries, and any design files or photos.</em>
+    </p>
+
+    <h3>Status</h3>
+    <p>
+      As of the most recent technical update: the ROS 2 Humble workspace, URDF model, and SLAM
+      Toolbox mapping pipeline (fused from LiDAR + Arduino odometry/IMU data) are live, and the
+      Foxglove HMI is displaying real-time SLAM maps and odometry. The motor controller, sensor
+      suite, and Pi-Arduino serial bridge are implemented. Nav2 integration for full closed-loop
+      autonomous navigation, the sample collection arm's electromechanical build, and onboard image
+      recognition are the next milestones.
+    </p>
 
     <h3>Gallery</h3>
     <div class="gallery">
-      <div class="placeholder-img">[ Robot chassis / drivetrain ]</div>
-      <div class="placeholder-img">[ Custom motor controller board ]</div>
-      <div class="placeholder-img">[ SLAM map / RViz or Foxglove screenshot ]</div>
-      <div class="placeholder-img">[ Nav2 path planning in action ]</div>
+      <div class="placeholder-img">[ System architecture diagram ]</div>
+      <div class="placeholder-img">[ ROS 2 node graph / architecture flowchart ]</div>
+      <div class="placeholder-img">[ Foxglove HMI screenshot ]</div>
+      <div class="placeholder-img">[ Gripper / arm 3D model or photo ]</div>
     </div>
   </div>
 
