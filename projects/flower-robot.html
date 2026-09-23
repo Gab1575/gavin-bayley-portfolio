@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../style.css?v=2">
+<link rel="stylesheet" href="../style.css?v=3">
 </head>
 <body>
 
@@ -37,7 +37,7 @@
     </div>
   </div>
 
-  <img class="photo hero contain" src="../images/flower-robot/01.jpg" alt="The fully assembled flower robot, rendered in Fusion 360">
+  <img class="photo hero" src="../images/flower-robot/10.jpg" alt="The fully assembled flower robot, powered on, in the lab">
 
   <div class="detail-body">
     <p>
@@ -48,59 +48,128 @@
       continuum-style stem, with no anthropomorphic face or voice.
     </p>
 
+    <h3>Demo</h3>
+    <video class="photo" controls preload="metadata" poster="../images/flower-robot/10.jpg">
+      <source src="../images/flower-robot/demo.mp4" type="video/mp4">
+    </video>
+
     <h3>Mechanical Design</h3>
     <p>
       CAD in Fusion 360, laser-cut acrylic subframes, and 3D-printed structural parts. The stem is
       a dual-stage tendon-driven continuum mechanism -- a stack of ball-and-socket joints strung
       with four tendons -- that bends smoothly rather than pivoting at discrete joints. The five-petal
       head carries its own independently addressable LED array and is driven off the stem by a
-      geared N20 motor with an encoder-based position loop. The base electronics plate and outer
-      pot were both laser-cut and 3D-printed to spec, with the full bill of materials and cut files
-      kept in the repo alongside the CAD source so the build is reproducible from scratch.
+      geared N20 motor with an encoder-based position loop.
     </p>
 
-    <h3>Software Architecture</h3>
+    <h3>ROS 2 Node Graph</h3>
     <p>
-      Built the full ROS&nbsp;2 (Humble) host stack: <code>flower_gui</code> (a Tkinter control
-      panel with manual and kinematic modes, a live 3D bend preview, and a set of built-in guided
-      breathing routines the flower can perform on its own), <code>continuum_controller_node</code>
-      (a kinematic solver converting bend targets into antagonistic servo-pair angles), and
-      <code>flower_mux</code> -- a mode-aware multiplexer that merges GUI and kinematic command
-      sources into one authoritative <code>RobotCommand</code> stream, carefully preserving the
-      GUI's LED and motor state even while kinematic mode is driving the servos. A
-      <code>micro-ROS agent</code> bridges that final stream to the ESP32 over Wi-Fi, and a
-      Foxglove bridge exposes every topic for live debugging.
+      The host stack is a mode-aware pipeline: the GUI and the kinematic solver both feed
+      <code>flower_mux</code>, which is the only node allowed to publish the final command the
+      hardware actually receives -- and it's careful to keep the GUI's LED/motor state intact even
+      while kinematic mode is driving the servos. Vision runs as two fully independent nodes that
+      aren't wired into control yet.
     </p>
+    <div class="diagram-wrap">
+      <svg class="diagram" viewBox="0 0 900 660" width="900" height="660" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="fArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="var(--text-dim)"></path>
+          </marker>
+          <marker id="fArrowAccent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="var(--accent)"></path>
+          </marker>
+        </defs>
+        <rect class="dg-node" x="370" y="8" width="160" height="36" rx="7"></rect>
+        <text class="dg-text" x="450" y="31" text-anchor="middle">Operator</text>
+        <rect class="dg-node-accent" x="330" y="78" width="240" height="46" rx="7"></rect>
+        <text class="dg-text" x="450" y="97" text-anchor="middle" font-weight="600">flower_gui_node</text>
+        <text class="dg-text-dim" x="450" y="113" text-anchor="middle">Tkinter GUI + breathing routines</text>
+        <line class="dg-edge" x1="450" y1="44" x2="450" y2="78" marker-end="url(#fArrow)"></line>
+        <rect class="dg-node" x="120" y="180" width="230" height="50" rx="7"></rect>
+        <text class="dg-text" x="235" y="200" text-anchor="middle" font-weight="600">continuum_controller_node</text>
+        <text class="dg-text-dim" x="235" y="216" text-anchor="middle">bend (theta,phi) -&gt; antagonistic servo pairs</text>
+        <rect class="dg-node-accent" x="530" y="180" width="230" height="50" rx="7"></rect>
+        <text class="dg-text" x="645" y="200" text-anchor="middle" font-weight="600">flower_mux_node</text>
+        <text class="dg-text-dim" x="645" y="216" text-anchor="middle">merges GUI + kinematic state</text>
+        <path class="dg-edge" d="M380,124 C300,145 260,155 235,180" marker-end="url(#fArrow)"></path>
+        <text class="dg-text-accent" x="255" y="150">/kinematic_commands</text>
+        <path class="dg-edge" d="M520,124 C600,145 630,155 645,180" marker-end="url(#fArrow)"></path>
+        <text class="dg-text-accent" x="605" y="150">/manual_commands</text>
+        <text class="dg-text-accent" x="605" y="163">/control_mode</text>
+        <path class="dg-edge" d="M350,205 C420,205 460,205 530,205" marker-end="url(#fArrow)"></path>
+        <text class="dg-text-accent" x="360" y="245">/kinematic_calculated_commands</text>
+        <path class="dg-edge-accent" d="M645,230 C645,255 500,255 450,278" marker-end="url(#fArrowAccent)"></path>
+        <text class="dg-text-accent" x="500" y="270" text-anchor="middle" font-weight="600">/flower_commands</text>
+        <rect class="dg-node" x="330" y="280" width="240" height="44" rx="7"></rect>
+        <text class="dg-text" x="450" y="298" text-anchor="middle" font-weight="600">micro-ROS Agent</text>
+        <text class="dg-text-dim" x="450" y="314" text-anchor="middle">Wi-Fi / UDP bridge</text>
+        <line class="dg-edge" x1="450" y1="324" x2="450" y2="356" marker-end="url(#fArrow)"></line>
+        <rect class="dg-node-accent" x="310" y="358" width="280" height="48" rx="7"></rect>
+        <text class="dg-text" x="450" y="378" text-anchor="middle" font-weight="600">ESP32 flower_node (firmware)</text>
+        <text class="dg-text-dim" x="450" y="394" text-anchor="middle">mDNS reconnect + command apply loop</text>
+        <path class="dg-edge" d="M400,406 C340,430 260,440 230,458" marker-end="url(#fArrow)"></path>
+        <path class="dg-edge" d="M450,406 L450,458" marker-end="url(#fArrow)"></path>
+        <path class="dg-edge" d="M500,406 C560,430 640,440 670,458" marker-end="url(#fArrow)"></path>
+        <rect class="dg-node" x="130" y="460" width="200" height="40" rx="7"></rect>
+        <text class="dg-text" x="230" y="484" text-anchor="middle">Servo Control (PCA9685)</text>
+        <rect class="dg-node" x="350" y="460" width="200" height="40" rx="7"></rect>
+        <text class="dg-text" x="450" y="484" text-anchor="middle">Petal LEDs (FastLED)</text>
+        <rect class="dg-node" x="570" y="460" width="200" height="40" rx="7"></rect>
+        <text class="dg-text" x="670" y="484" text-anchor="middle">N20 Motor + Encoder</text>
+        <path class="dg-edge" d="M310,382 C220,400 180,430 180,528" marker-end="url(#fArrow)"></path>
+        <text class="dg-text-accent" x="80" y="450" text-anchor="middle">/flower_debug</text>
+        <rect class="dg-node" x="80" y="530" width="200" height="44" rx="7"></rect>
+        <text class="dg-text" x="180" y="548" text-anchor="middle" font-weight="600">Foxglove Bridge</text>
+        <text class="dg-text-dim" x="180" y="564" text-anchor="middle">live debug / telemetry</text>
+        <text class="dg-text-dim" x="450" y="608" text-anchor="middle" font-style="italic">Vision &amp; Perception -- separate nodes, not yet wired into control</text>
+        <rect class="dg-node" x="380" y="530" width="230" height="44" rx="7" stroke-dasharray="4 3"></rect>
+        <text class="dg-text" x="495" y="548" text-anchor="middle" font-weight="600">localization_tracker</text>
+        <text class="dg-text-dim" x="495" y="564" text-anchor="middle">HSV + EMA -&gt; /vision/red_ball, /vision/blue_ball</text>
+        <rect class="dg-node" x="630" y="530" width="230" height="44" rx="7" stroke-dasharray="4 3"></rect>
+        <text class="dg-text" x="745" y="548" text-anchor="middle" font-weight="600">face_tracker</text>
+        <text class="dg-text-dim" x="745" y="564" text-anchor="middle">RetinaFace -&gt; /face_tracking_angles</text>
+      </svg>
+      <div class="dcaption">flower_gui / continuum_controller_node / flower_mux -&gt; micro-ROS -&gt; ESP32 firmware. Vision nodes run independently.</div>
+    </div>
+
+    <div class="tech-table-wrap">
+      <table class="tech-table">
+        <tr><th>Topic</th><th>Type</th><th>Published by</th><th>Purpose</th></tr>
+        <tr><td>/manual_commands</td><td class="mono">RobotCommand</td><td>flower_gui_node</td><td>Full manual servo / LED / N20 state, published continuously</td></tr>
+        <tr><td>/kinematic_commands</td><td class="mono">Float64MultiArray</td><td>flower_gui_node</td><td>[theta1, phi1, theta2, phi2] bend targets, degrees</td></tr>
+        <tr><td>/control_mode</td><td class="mono">String</td><td>flower_gui_node</td><td>"manual" or "kinematic" -- selects what flower_mux forwards</td></tr>
+        <tr><td>/kinematic_calculated_commands</td><td class="mono">RobotCommand</td><td>continuum_controller_node</td><td>Per-servo angles solved from the bend targets</td></tr>
+        <tr><td>/flower_commands</td><td class="mono">RobotCommand</td><td>flower_mux_node</td><td>Final merged command -- the only topic the ESP32 receives</td></tr>
+        <tr><td>/flower_debug</td><td class="mono">String</td><td>ESP32 flower_node</td><td>Runtime telemetry / troubleshooting</td></tr>
+        <tr><td>/vision/red_ball, /vision/blue_ball</td><td class="mono">PointStamped</td><td>localization_tracker</td><td>3D marker position; not yet consumed downstream</td></tr>
+        <tr><td>/face_tracking_angles</td><td class="mono">Point</td><td>face_tracker</td><td>Face pan/tilt offset; not yet consumed downstream</td></tr>
+      </table>
+    </div>
 
     <h3>Embedded Firmware</h3>
     <p>
-      Wrote the ESP32 firmware (PlatformIO/C++) that receives the merged command stream and drives
-      the hardware every loop iteration: four servos through a PCA9685 I2C driver (smoothly
-      S-curve-eased toward each commanded angle over a requested time window), the petal LED array
-      via FastLED, and the N20 base motor through an encoder-feedback position loop. Connectivity
-      is handled by a self-healing Wi-Fi/micro-ROS reconnection routine that resolves the host over
-      mDNS and automatically re-establishes the ROS session if the link drops -- with a visible LED
-      status animation during each connection phase -- and debug telemetry is published back to the
-      host for troubleshooting.
+      ESP32 firmware (PlatformIO/C++) driving four servos through a PCA9685 I2C driver (S-curve-eased
+      toward each commanded angle), the petal LED array via FastLED, and the N20 base motor through
+      an encoder-feedback position loop. Connectivity is a self-healing Wi-Fi/micro-ROS routine that
+      resolves the host over mDNS and automatically re-establishes the ROS session if the link drops,
+      with a visible LED status animation during each connection phase.
     </p>
 
     <h3>Perception</h3>
     <p>
-      Implemented two independent OpenCV-based perception nodes, each on its own USB camera.
-      <code>localization_tracker</code> detects red/blue marker balls with HSV color segmentation,
-      shape-filters candidates by circularity and solidity to reject glare, corrects for lens
-      distortion using calibrated camera intrinsics, and smooths the published 3D position with a
-      per-color exponential moving average. <code>face_tracker</code> uses RetinaFace to find the
-      nearest face and publish its pan/tilt offset. Neither is wired into closed-loop control yet --
-      they lay the groundwork for future localization- and attention-based behaviors.
+      Two independent OpenCV nodes, each on its own USB camera. <code>localization_tracker</code>
+      detects red/blue marker balls with HSV segmentation, shape-filters by circularity/solidity to
+      reject glare, corrects lens distortion from calibrated intrinsics, and smooths position with a
+      per-color exponential moving average. <code>face_tracker</code> uses RetinaFace for the
+      nearest-face pan/tilt offset. Neither is closed into control yet.
     </p>
 
     <h3>Guided Breathing Routines</h3>
     <p>
-      Beyond manual and LLM-driven control, the GUI ships with pre-programmed guided routines
-      (e.g. box breathing) that animate the flower's petals and color through a fixed rhythm on
-      their own -- a direct, concrete link between the robot's movement vocabulary and the mental
-      health use case it's built around.
+      Beyond manual and LLM-driven control, the GUI ships pre-programmed guided routines (e.g. box
+      breathing) that animate petals and color through a fixed rhythm on their own -- a direct link
+      between the robot's movement vocabulary and the mental health use case it's built around.
     </p>
 
     <h3>Documentation</h3>
@@ -113,6 +182,8 @@
 
     <h3>Gallery</h3>
     <div class="gallery">
+      <img class="photo" src="../images/flower-robot/11.jpg" alt="Real tendon-driven servo plate, held in hand, during assembly">
+      <img class="photo contain" src="../images/flower-robot/01.jpg" alt="Full-assembly rendering in Fusion 360">
       <img class="photo" src="../images/flower-robot/02.jpg" alt="The five-petal flower head assembly">
       <img class="photo" src="../images/flower-robot/03.jpg" alt="Head-to-stem connection, showing the localization marker balls">
       <img class="photo contain" src="../images/flower-robot/04.jpg" alt="The full tendon-driven continuum stem stack">

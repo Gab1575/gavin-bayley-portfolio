@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../style.css?v=2">
+<link rel="stylesheet" href="../style.css?v=3">
 </head>
 <body>
 
@@ -94,6 +94,76 @@
       target detection once the rover reaches the search area.
     </p>
 
+    <div class="diagram-wrap">
+      <svg class="diagram" viewBox="0 0 950 530" width="950" height="530" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="hArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="var(--text-dim)"></path>
+          </marker>
+          <marker id="hArrowAccent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="var(--accent)"></path>
+          </marker>
+        </defs>
+        <rect class="dg-node" x="40" y="10" width="210" height="40" rx="7"></rect>
+        <text class="dg-text" x="145" y="34" text-anchor="middle">Slamtec LiDAR (sensor)</text>
+        <rect class="dg-node" x="650" y="10" width="210" height="40" rx="7"></rect>
+        <text class="dg-text" x="755" y="34" text-anchor="middle">Arduino Uno (sensors + motors)</text>
+        <line class="dg-edge" x1="145" y1="50" x2="145" y2="90" marker-end="url(#hArrow)"></line>
+        <line class="dg-edge" x1="755" y1="50" x2="755" y2="90" marker-end="url(#hArrow)"></line>
+        <rect class="dg-node-accent" x="40" y="92" width="210" height="44" rx="7"></rect>
+        <text class="dg-text" x="145" y="112" text-anchor="middle" font-weight="600">SLidar Node</text>
+        <text class="dg-text-dim" x="145" y="128" text-anchor="middle">publishes /scan</text>
+        <rect class="dg-node-accent" x="640" y="92" width="230" height="56" rx="7"></rect>
+        <text class="dg-text" x="755" y="112" text-anchor="middle" font-weight="600">Arduino Bridge</text>
+        <text class="dg-text-dim" x="755" y="127" text-anchor="middle">/odom /imu_data /joint_states</text>
+        <text class="dg-text-dim" x="755" y="141" text-anchor="middle">tf: odom -&gt; base_link</text>
+        <rect class="dg-node" x="340" y="200" width="220" height="52" rx="7"></rect>
+        <text class="dg-text" x="450" y="221" text-anchor="middle" font-weight="600">Robot State Publisher</text>
+        <text class="dg-text-dim" x="450" y="237" text-anchor="middle">URDF + /joint_states -&gt; /tf</text>
+        <path class="dg-edge" d="M755,148 C755,180 560,200 560,220" marker-end="url(#hArrow)"></path>
+        <text class="dg-text-accent" x="640" y="185" text-anchor="middle">/joint_states</text>
+        <rect class="dg-node-accent" x="330" y="300" width="240" height="58" rx="7"></rect>
+        <text class="dg-text" x="450" y="321" text-anchor="middle" font-weight="600">SLAM Toolbox</text>
+        <text class="dg-text-dim" x="450" y="336" text-anchor="middle">scan-matches -&gt; /map</text>
+        <text class="dg-text-dim" x="450" y="350" text-anchor="middle">corrects map -&gt; odom drift</text>
+        <path class="dg-edge" d="M150,136 C150,220 300,290 330,315" marker-end="url(#hArrow)"></path>
+        <text class="dg-text-accent" x="200" y="260">/scan</text>
+        <path class="dg-edge" d="M700,148 C650,220 550,280 500,300" marker-end="url(#hArrow)"></path>
+        <text class="dg-text-accent" x="640" y="230" text-anchor="middle">/odom</text>
+        <line class="dg-edge" x1="450" y1="252" x2="450" y2="300" marker-end="url(#hArrow)"></line>
+        <text class="dg-text-accent" x="465" y="280">/tf</text>
+        <rect class="dg-node" x="640" y="300" width="230" height="52" rx="7"></rect>
+        <text class="dg-text" x="755" y="321" text-anchor="middle" font-weight="600">Foxglove Bridge</text>
+        <text class="dg-text-dim" x="755" y="337" text-anchor="middle">/scan /odom /tf /joint_states /map</text>
+        <path class="dg-edge" d="M570,325 C600,320 610,320 640,322" marker-end="url(#hArrow)"></path>
+        <rect class="dg-node" x="640" y="400" width="230" height="44" rx="7"></rect>
+        <text class="dg-text" x="755" y="420" text-anchor="middle" font-weight="600">Foxglove Studio</text>
+        <text class="dg-text-dim" x="755" y="435" text-anchor="middle">remote laptop, WebSocket</text>
+        <line class="dg-edge" x1="755" y1="352" x2="755" y2="400" marker-end="url(#hArrow)"></line>
+        <rect class="dg-node" x="330" y="440" width="240" height="60" rx="7" stroke-dasharray="4 3"></rect>
+        <text class="dg-text-dim" x="450" y="461" text-anchor="middle" font-weight="600">Nav2 (next milestone)</text>
+        <text class="dg-text-dim" x="450" y="476" text-anchor="middle">global (A*) + local planner</text>
+        <text class="dg-text-dim" x="450" y="490" text-anchor="middle">/map /scan /odom /tf -&gt; /cmd_vel</text>
+        <path class="dg-edge" d="M400,358 C380,390 380,410 400,440" stroke-dasharray="4 3" marker-end="url(#hArrow)"></path>
+        <path class="dg-edge-accent" d="M570,465 L890,465 L890,120 L872,120" stroke-dasharray="4 3" marker-end="url(#hArrowAccent)"></path>
+        <text class="dg-text-accent" x="895" y="300" transform="rotate(90 895 300)" text-anchor="middle">/cmd_vel (planned)</text>
+        <text class="dg-text-dim" x="450" y="524" text-anchor="middle" font-style="italic">Dashed = next milestone, not yet closing the loop</text>
+      </svg>
+      <div class="dcaption">Perception/mapping pipeline is live; Nav2 closing the loop back to the Arduino is the next milestone.</div>
+    </div>
+
+    <div class="tech-table-wrap">
+      <table class="tech-table">
+        <tr><th>Node</th><th>Publishes</th><th>Subscribes</th><th>Role</th></tr>
+        <tr><td>SLidar Node</td><td class="mono">/scan</td><td>-- (raw serial)</td><td>Formats LiDAR range/angle stream into sensor_msgs/LaserScan</td></tr>
+        <tr><td>Arduino Bridge</td><td class="mono">/odom, /imu_data, /joint_states, tf</td><td>Arduino serial stream</td><td>Parses hardware data, republishes as ROS 2 topics, broadcasts odom-&gt;base_link</td></tr>
+        <tr><td>Robot State Publisher</td><td class="mono">/tf</td><td>/joint_states, URDF</td><td>Computes exact 3D pose of every link from the kinematic tree</td></tr>
+        <tr><td>SLAM Toolbox</td><td class="mono">/map, tf (map-&gt;odom)</td><td>/scan, /odom, /tf</td><td>Builds the 2D occupancy grid, corrects odometry drift</td></tr>
+        <tr><td>Foxglove Bridge</td><td class="mono">WebSocket</td><td>/scan, /odom, /tf, /joint_states, /map</td><td>Serializes the whole state for remote visualization</td></tr>
+        <tr><td>Nav2 <em>(planned)</em></td><td class="mono">/cmd_vel</td><td>/map, /scan, /odom, /tf</td><td>Global (A*) + local planning to close the autonomy loop</td></tr>
+      </table>
+    </div>
+
     <h3>Sample Collection Mechanism</h3>
     <p>
       A 2-DOF robotic arm mounted to the chassis tilts down up to 90 degrees to reach the ground,
@@ -141,10 +211,10 @@
 
     <h3>Gallery</h3>
     <div class="gallery">
-      <div class="placeholder-img">[ System architecture diagram ]</div>
-      <div class="placeholder-img">[ ROS 2 node graph / architecture flowchart ]</div>
+      <div class="placeholder-img">[ Photo: HERSHEY, fully assembled ]</div>
       <div class="placeholder-img">[ Foxglove HMI screenshot ]</div>
       <div class="placeholder-img">[ Gripper / arm 3D model or photo ]</div>
+      <div class="placeholder-img">[ Photo: chassis / drivetrain ]</div>
     </div>
   </div>
 
