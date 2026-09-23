@@ -258,6 +258,13 @@ section:first-of-type { border-top: none; }
   border: 1px solid var(--border);
 }
 
+/* for tall/portrait renders on a plain white background: show the whole
+   image instead of cropping it under a landscape aspect box */
+.photo.contain, .card-thumb.contain {
+  object-fit: contain;
+  background: #fff;
+}
+
 /* ---------- project grid ---------- */
 .grid {
   display: grid;

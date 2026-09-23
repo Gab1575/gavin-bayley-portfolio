@@ -31,68 +31,102 @@
     <h1>LLM-Driven Mental Health Companion Robot</h1>
     <div class="meta">Undergraduate Research Assistant, MITHRIL Lab · Ingenuity Labs Research Institute, Queen's University · Supervised by Prof. Matthew Pan · May – Aug 2026</div>
     <div class="tags">
-      <span class="tag">ROS 2</span><span class="tag">micro-ROS</span><span class="tag">ESP32 / C++</span>
+      <span class="tag">ROS 2 Humble</span><span class="tag">micro-ROS</span><span class="tag">ESP32 / C++</span>
       <span class="tag">Python</span><span class="tag">OpenCV</span><span class="tag">Fusion 360</span>
       <span class="tag">Tkinter</span><span class="tag">Human-Robot Interaction</span>
     </div>
   </div>
 
-  <div class="placeholder-img large">[ Hero photo: the fully assembled flower robot ]</div>
+  <img class="photo hero contain" src="../images/flower-robot/01.jpg" alt="The fully assembled flower robot, rendered in Fusion 360">
 
   <div class="detail-body">
     <p>
       Designed, fabricated, and programmed a tendon-driven, continuum-stem animatronic flower
-      robot from the ground up, serving as the physical embodiment for an LLM-driven mental
-      health companion research platform in the lab's Human-Robot Interaction research program.
+      robot from the ground up -- the physical embodiment for an LLM-driven mental health
+      companion research platform in the lab's Human-Robot Interaction research program. The robot
+      communicates non-verbally through petal color, petal-angle motion, and a dual-stage
+      continuum-style stem, with no anthropomorphic face or voice.
     </p>
 
     <h3>Mechanical Design</h3>
     <p>
-      CAD in Fusion 360, laser-cut acrylic subframes, and 3D-printed structural parts, including a
-      4-tendon continuum stem built from stacked ball-and-socket joints and a five-petal head
-      driven by its own base motor.
+      CAD in Fusion 360, laser-cut acrylic subframes, and 3D-printed structural parts. The stem is
+      a dual-stage tendon-driven continuum mechanism -- a stack of ball-and-socket joints strung
+      with four tendons -- that bends smoothly rather than pivoting at discrete joints. The five-petal
+      head carries its own independently addressable LED array and is driven off the stem by a
+      geared N20 motor with an encoder-based position loop. The base electronics plate and outer
+      pot were both laser-cut and 3D-printed to spec, with the full bill of materials and cut files
+      kept in the repo alongside the CAD source so the build is reproducible from scratch.
     </p>
 
     <h3>Software Architecture</h3>
     <p>
-      Built the full ROS&nbsp;2 (Humble) host stack: a Tkinter control GUI with a live 3D
-      kinematics preview, a forward-kinematics solver mapping requested bend targets into
-      antagonistic servo commands, and a command-mux layer bridged to the robot over
-      micro-ROS/Wi-Fi.
+      Built the full ROS&nbsp;2 (Humble) host stack: <code>flower_gui</code> (a Tkinter control
+      panel with manual and kinematic modes, a live 3D bend preview, and a set of built-in guided
+      breathing routines the flower can perform on its own), <code>continuum_controller_node</code>
+      (a kinematic solver converting bend targets into antagonistic servo-pair angles), and
+      <code>flower_mux</code> -- a mode-aware multiplexer that merges GUI and kinematic command
+      sources into one authoritative <code>RobotCommand</code> stream, carefully preserving the
+      GUI's LED and motor state even while kinematic mode is driving the servos. A
+      <code>micro-ROS agent</code> bridges that final stream to the ESP32 over Wi-Fi, and a
+      Foxglove bridge exposes every topic for live debugging.
     </p>
 
-    <h3>Embedded Systems</h3>
+    <h3>Embedded Firmware</h3>
     <p>
-      Developed the ESP32 firmware (PlatformIO/C++) driving 4 servos through a PCA9685 I2C
-      controller, WS2812B petal LEDs, and an encoder-controlled base motor, with a self-healing
-      Wi-Fi/micro-ROS reconnection protocol using mDNS discovery.
+      Wrote the ESP32 firmware (PlatformIO/C++) that receives the merged command stream and drives
+      the hardware every loop iteration: four servos through a PCA9685 I2C driver (smoothly
+      S-curve-eased toward each commanded angle over a requested time window), the petal LED array
+      via FastLED, and the N20 base motor through an encoder-feedback position loop. Connectivity
+      is handled by a self-healing Wi-Fi/micro-ROS reconnection routine that resolves the host over
+      mDNS and automatically re-establishes the ROS session if the link drops -- with a visible LED
+      status animation during each connection phase -- and debug telemetry is published back to the
+      host for troubleshooting.
     </p>
 
     <h3>Perception</h3>
     <p>
-      Implemented two OpenCV-based perception nodes — HSV-segmentation ball localization and
-      RetinaFace face tracking — to lay the groundwork for closed-loop and attention-based
-      behaviors.
+      Implemented two independent OpenCV-based perception nodes, each on its own USB camera.
+      <code>localization_tracker</code> detects red/blue marker balls with HSV color segmentation,
+      shape-filters candidates by circularity and solidity to reject glare, corrects for lens
+      distortion using calibrated camera intrinsics, and smooths the published 3D position with a
+      per-color exponential moving average. <code>face_tracker</code> uses RetinaFace to find the
+      nearest face and publish its pan/tilt offset. Neither is wired into closed-loop control yet --
+      they lay the groundwork for future localization- and attention-based behaviors.
+    </p>
+
+    <h3>Guided Breathing Routines</h3>
+    <p>
+      Beyond manual and LLM-driven control, the GUI ships with pre-programmed guided routines
+      (e.g. box breathing) that animate the flower's petals and color through a fixed rhythm on
+      their own -- a direct, concrete link between the robot's movement vocabulary and the mental
+      health use case it's built around.
     </p>
 
     <h3>Documentation</h3>
     <p>
-      Authored a 27-page technical handbook covering assembly, tuning, software architecture, and
-      setup/operation, so the build is fully reproducible by future lab members.
+      Authored a 27-page technical handbook -- assembly instructions, tendon tensioning/repair
+      procedures, full software architecture, host setup, and day-to-day startup/shutdown -- plus
+      the bill of materials and laser-cut sketches, so the build is fully reproducible by future lab
+      members without needing to ask me directly.
     </p>
 
     <h3>Gallery</h3>
     <div class="gallery">
-      <div class="placeholder-img">[ Stem / servo assembly ]</div>
-      <div class="placeholder-img">[ Control GUI screenshot ]</div>
-      <div class="placeholder-img">[ ESP32 electronics plate ]</div>
-      <div class="placeholder-img">[ ROS 2 architecture diagram ]</div>
+      <img class="photo" src="../images/flower-robot/02.jpg" alt="The five-petal flower head assembly">
+      <img class="photo" src="../images/flower-robot/03.jpg" alt="Head-to-stem connection, showing the localization marker balls">
+      <img class="photo contain" src="../images/flower-robot/04.jpg" alt="The full tendon-driven continuum stem stack">
+      <img class="photo" src="../images/flower-robot/05.jpg" alt="Servo assembly detail">
+      <img class="photo" src="../images/flower-robot/06.jpg" alt="ESP32 and PCA9685 electronics plate">
+      <img class="photo" src="../images/flower-robot/07.jpg" alt="Tendon tensioning mechanism on the electronics plate">
+      <img class="photo" src="../images/flower-robot/08.jpg" alt="The outer flower pot assembly">
+      <img class="photo" src="../images/flower-robot/09.jpg" alt="Internal bearing and plate assembly">
     </div>
   </div>
 
   <div class="detail-nav">
     <a href="led-billboard.html">← P5 HUB75 LED Billboard</a>
-    <a href="slam-robot.html">Autonomous SLAM Robot →</a>
+    <a href="slam-robot.html">HERSHEY Mars Rover →</a>
   </div>
 </div>
 
