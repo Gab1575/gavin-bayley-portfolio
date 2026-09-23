@@ -27,17 +27,17 @@
   <a class="back-link" href="../index.html#projects">← Back to portfolio</a>
 
   <div class="detail-head">
-    <span class="badge">Add photos + your specific role</span>
+    <span class="badge">Confirm your specific role</span>
     <h1>HERSHEY — Autonomous Mars Sample-Retrieval Rover</h1>
     <div class="meta">MREN 203 Team Design Project (Team SMORES: Sabina Siddiqui, Gavin Bayley, Nourhan Jadallah) -- Winter 2026</div>
     <div class="tags">
       <span class="tag">ROS 2 Humble</span><span class="tag">Nav2</span><span class="tag">SLAM Toolbox</span>
       <span class="tag">LiDAR</span><span class="tag">Raspberry Pi</span><span class="tag">Arduino</span>
-      <span class="tag">Feedforward + PID</span><span class="tag">Macro-Pulsing</span><span class="tag">Foxglove</span>
+      <span class="tag">PID Control</span><span class="tag">Foxglove</span>
     </div>
   </div>
 
-  <div class="placeholder-img large">[ Hero photo: HERSHEY, fully assembled ]</div>
+  <img class="photo hero" src="../images/slam-robot/01.jpg" alt="HERSHEY driving across a hardwood floor, live">
 
   <div class="detail-body">
     <p>
@@ -50,6 +50,11 @@
       chassis rather than flight hardware.
     </p>
 
+    <h3>Demo</h3>
+    <video class="photo" controls preload="metadata" poster="../images/slam-robot/01.jpg">
+      <source src="../images/slam-robot/demo.mp4" type="video/mp4">
+    </video>
+
     <h3>System Architecture</h3>
     <p>
       HERSHEY splits compute across two layers: an Arduino Uno handles hard real-time sensor
@@ -57,6 +62,7 @@
       image recognition. The two communicate over a serial bridge; a Foxglove Studio HMI connects
       wirelessly to the Pi's ROS 2 network for remote telemetry, visualization, and manual override.
     </p>
+    <img class="photo contain" src="../images/slam-robot/10.jpg" alt="Team-drawn hardware system overview: Arduino, IMU, motor controller, encoders, Pi, LiDAR, battery, Foxglove HMI">
 
     <h3>Chassis &amp; Locomotion</h3>
     <p>
@@ -65,34 +71,47 @@
       velocities -- feeding directly into the controller's differential-drive kinematics.
     </p>
 
-    <h3>Motor Controller: Feedforward + PID + Macro-Pulsing</h3>
+    <h3>Hardware Exploration: ESP32 Migration</h3>
     <p>
-      The Arduino-side motor controller takes a target linear and angular velocity and turns it
-      into left/right PWM commands through several stages: an acceleration limiter to prevent wheel
-      slip, a PID correction on yaw rate (read from a 9DOF IMU) to hold heading, and differential-drive
-      kinematics to split the corrected linear/angular targets into per-wheel speed targets using the
-      chassis track width. Each wheel then runs its own hybrid controller -- a feedforward term
-      interpolated from a calibration map of PWM-vs-speed, corrected by a PID loop closed on encoder
-      feedback (3000 ticks/revolution). Below the DC motors' stall voltage, continuous PWM can't hold
-      a speed at all, so the controller switches to <strong>macro-pulsing</strong>: driving the motor
-      at its minimum-viable PWM in short pulses whose duty cycle is scaled to the requested speed,
-      simulating a lower effective speed than continuous drive can achieve. The whole loop runs on a
-      non-blocking hardware-timer architecture at 100 Hz for motor control and 20 Hz for sensor
-      reads, rather than blocking delays.
+      In parallel with the Arduino Uno WiFi Rev2 build (the version actually committed as the
+      project's <code>platformio.ini</code> target), the team wired up and tested an ESP32-S3 dev
+      board with an external Adafruit LSM6DSOX + LIS3MDL 9DOF IMU, aiming for micro-ROS support,
+      more GPIO, and a faster clock than the Uno's 16&nbsp;MHz. A full pinout/wiring diagram was
+      drawn up for the swap (SHARP IR sensors, quadrature encoders, dual motor driver, IMU over
+      I2C).
+    </p>
+    <img class="photo contain" src="../images/slam-robot/06.jpg" alt="ESP32-S3 dev board wired to an external 9DOF IMU breakout, on the bench">
+
+    <h3>Motor Controller</h3>
+    <p>
+      The designed motor controller (below) takes target linear/angular velocity and turns it into
+      left/right PWM through an acceleration limiter, a PID correction on yaw rate (from the IMU),
+      differential-drive kinematics, and a per-wheel hybrid controller blending a feedforward
+      lookup table with PID correction from encoder feedback -- switching to macro-pulsing (short
+      pulses at minimum-viable PWM) below the DC motors' stall voltage, where continuous PWM can't
+      hold a speed at all.
+    </p>
+    <img class="photo contain" src="../images/slam-robot/03.jpg" alt="Team-drawn motor controller flow chart: feedforward + PID + macro-pulsing per wheel">
+    <p>
+      <em>What's actually in the repo right now is the baseline of that design: a working PID loop
+      on both linear velocity (averaged from the left/right encoders) and angular velocity (IMU
+      yaw), with integral windup guards, feeding a differential-drive mix into the H-bridge. The
+      feedforward lookup table and macro-pulsing stage in the diagram above are the documented next
+      step -- I don't have confirmation of whether they made it into the final build before demo
+      day. Flagging this rather than claiming more than I can verify from the code.</em>
     </p>
 
     <h3>Perception, SLAM &amp; Navigation</h3>
     <p>
       A Slamtec LiDAR publishes 2D range data to <code>/scan</code>; a URDF model of the rover
-      (built from the Robot State Publisher package) defines the physical/kinematic tree so every
-      sensor reading is correctly positioned relative to the chassis. SLAM Toolbox fuses the LiDAR
-      scans with wheel odometry and IMU data to build a 2D occupancy grid map while correcting for
-      odometry drift. On top of that, Nav2 provides global path planning (A*) and a local planner for
-      real-time obstacle avoidance, outputting target velocities that the Arduino bridge translates
-      back into serial motor commands -- closing the loop from map to motion. A Pi Cam feed processed
-      with OpenCV (trained to recognize the sample tubes' visual signature) handles final-approach
-      target detection once the rover reaches the search area.
+      defines the physical/kinematic tree so every sensor reading is correctly positioned relative
+      to the chassis. SLAM Toolbox fuses the LiDAR scans with wheel odometry and IMU data to build
+      a 2D occupancy grid map while correcting for odometry drift. Nav2 provides global path
+      planning (A*) and a local planner for obstacle avoidance, and a Pi Cam feed processed with
+      OpenCV handles sample-tube detection on final approach.
     </p>
+    <img class="photo contain" src="../images/slam-robot/02.jpg" alt="HERSHEY's URDF model rendered in RViz">
+    <img class="photo contain" src="../images/slam-robot/11.jpg" alt="Team-drawn software module diagram: Pi ROS 2 nodes, Arduino modules, HMI">
 
     <div class="diagram-wrap">
       <svg class="diagram" viewBox="0 0 950 530" width="950" height="530" xmlns="http://www.w3.org/2000/svg">
@@ -149,7 +168,7 @@
         <text class="dg-text-accent" x="895" y="300" transform="rotate(90 895 300)" text-anchor="middle">/cmd_vel (planned)</text>
         <text class="dg-text-dim" x="450" y="524" text-anchor="middle" font-style="italic">Dashed = next milestone, not yet closing the loop</text>
       </svg>
-      <div class="dcaption">Perception/mapping pipeline is live; Nav2 closing the loop back to the Arduino is the next milestone.</div>
+      <div class="dcaption">ROS 2 node graph, redrawn from the team's architecture -- perception/mapping pipeline is live; Nav2 is next.</div>
     </div>
 
     <div class="tech-table-wrap">
@@ -172,6 +191,14 @@
       dimensions (15-18 cm long, ~1.5 cm radius), the gripper closes to a ~23 mm radius to secure
       the tube from its edges without needing precise centering.
     </p>
+    <div class="gallery">
+      <img class="photo contain" src="../images/slam-robot/07.jpg" alt="Hand sketch of the robotic arm concept mounted to the rover body">
+      <img class="photo contain" src="../images/slam-robot/08.jpg" alt="Annotated CAD sketch of the gripper: spur gears, clamp support, holding plate">
+    </div>
+    <p style="margin-top:16px;">
+      <img class="photo" src="../images/slam-robot/09.jpg" alt="NASA/JPL reference photo of an actual Mars sample tube on the surface, used to size the gripper" style="max-width:360px;">
+    </p>
+    <div class="dcaption" style="text-align:left;">NASA/JPL reference photo (not our footage) of a real Perseverance-cached sample tube -- used to size the gripper geometry.</div>
 
     <h3>Human-Machine Interface</h3>
     <p>
@@ -181,6 +208,10 @@
       manual velocity overrides. A heartbeat timeout on the Arduino side brings the rover to a safe
       stop automatically if it loses contact with the Pi.
     </p>
+    <div class="gallery">
+      <img class="photo" src="../images/slam-robot/04.jpg" alt="Foxglove Studio dashboard: live LiDAR scan, SLAM map, and IMU data panel">
+      <img class="photo" src="../images/slam-robot/05.jpg" alt="Foxglove 3D panel showing the completed SLAM occupancy map, photographed live off the monitor">
+    </div>
 
     <h3>Systems Engineering: Regulatory &amp; Cost Framing</h3>
     <p>
@@ -194,28 +225,24 @@
 
     <h3>Custom PCB</h3>
     <p>
-      <em>Placeholder -- the Arduino communicates with a dedicated "sample collection breakout
-      board" alongside the motor driver, per the design docs, but I don't have specifics on what's
-      on it. Fill in: what the board does, what it carries, and any design files or photos.</em>
+      <em>Partially resolved -- the repo's PCB folder has a Fritzing wiring diagram and ESP32
+      pinout for the exploration branch above (sensors + dual motor driver + IMU), but that's a
+      point-to-point wiring layout, not a fabricated custom PCB. The Conceptual Design Report also
+      references a separate "sample collection breakout board" that the Arduino talks to alongside
+      the motor driver -- I still don't have specifics on that board. If it's a real board, let me
+      know what's on it.</em>
     </p>
 
     <h3>Status</h3>
     <p>
-      As of the most recent technical update: the ROS 2 Humble workspace, URDF model, and SLAM
-      Toolbox mapping pipeline (fused from LiDAR + Arduino odometry/IMU data) are live, and the
-      Foxglove HMI is displaying real-time SLAM maps and odometry. The motor controller, sensor
-      suite, and Pi-Arduino serial bridge are implemented. Nav2 integration for full closed-loop
-      autonomous navigation, the sample collection arm's electromechanical build, and onboard image
-      recognition are the next milestones.
+      Confirmed from the team's own Foxglove capture (screenshots and photos above, dated into
+      late March): the ROS 2 Humble workspace, URDF model, and SLAM Toolbox mapping pipeline
+      (fused from LiDAR + Arduino odometry/IMU data) are live and building real occupancy maps. The
+      baseline PID motor controller, sensor suite, and Pi-Arduino serial bridge are implemented.
+      Nav2 integration for full closed-loop autonomous navigation, the feedforward/macro-pulsing
+      upgrade to the motor controller, the sample collection arm's electromechanical build, and
+      onboard image recognition are the next milestones.
     </p>
-
-    <h3>Gallery</h3>
-    <div class="gallery">
-      <div class="placeholder-img">[ Photo: HERSHEY, fully assembled ]</div>
-      <div class="placeholder-img">[ Foxglove HMI screenshot ]</div>
-      <div class="placeholder-img">[ Gripper / arm 3D model or photo ]</div>
-      <div class="placeholder-img">[ Photo: chassis / drivetrain ]</div>
-    </div>
   </div>
 
   <div class="detail-nav">
