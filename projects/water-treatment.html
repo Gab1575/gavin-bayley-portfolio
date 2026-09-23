@@ -28,51 +28,108 @@
 
   <div class="detail-head">
     <h1>Scale Water Treatment System</h1>
-    <div class="meta">Team project</div>
+    <div class="meta">Team TastyWaterEng (5 members: Gavin Bayley, Ben Dunkley, Xander Brooks, Skander Haddad-Bouzayen, Leo Mu) -- APSC Engineering Design</div>
     <div class="tags">
-      <span class="tag">SolidWorks</span><span class="tag">Technical Documentation</span>
-      <span class="tag">Rapid Prototyping</span><span class="tag">Team Leadership</span><span class="tag">3D Printing</span><span class="tag">Arduino</span>
+      <span class="tag">SolidWorks</span><span class="tag">Arduino</span><span class="tag">Technical Documentation</span>
+      <span class="tag">Rapid Prototyping</span><span class="tag">3D Printing</span><span class="tag">Systems Testing</span>
     </div>
   </div>
 
-  <img class="photo hero" src="../images/water-treatment/04.jpg" alt="Rendering of the full water treatment system assembly">
+  <img class="photo hero" src="../images/water-treatment/06.jpg" alt="The completed water pre-treatment prototype, fully assembled and running">
 
   <div class="detail-body">
     <p>
-      Designed and fabricated a functional automated water treatment system. This project required
-      managing strict material constraints alongside complex team dynamics.
+      A design-course project run as a real client brief: the fictional Nunavut community of
+      "Awesome" faces turbidity spikes (up to 275 NTU) that exceed what its existing treatment
+      plant can process. Team TastyWaterEng designed, built, and tested a small-scale automated
+      water <em>pre</em>-treatment prototype -- coagulation, flocculation, sedimentation, and
+      filtration -- to knock turbidity down before it reaches the existing plant, then used the
+      prototype's results to size a full-scale 17,000&nbsp;L version.
     </p>
 
-    <h3>Project Overview</h3>
+    <h3>My Role: Dispensing Assembly</h3>
     <p>
-      The project was split into three separate systems. My responsibility was designing a
-      dispensing assembly to accurately and reliably dispense 9g of aluminum sulfate into a mixing
-      tank, under a tight material allowance of 75g of 3D-printer filament for the whole system.
+      Three teammates independently designed competing dispensing assemblies to dose 0.8&nbsp;g of
+      aluminum sulfate (alum) coagulant per cycle. Mine linearizes a 9g servo's rotation into a
+      sliding carrier that shuttles the alum from the intake funnel to the output hole and back --
+      four parts (body, alum carrier, servo, connecting rod), chosen for using the least 3D-printing
+      filament of the three designs. It was selected as the final design for the prototype after
+      proving the most reliable of the three in testing.
+    </p>
+    <div class="gallery">
+      <img class="photo contain" src="../images/water-treatment/09.jpg" alt="CAD render of my dispensing assembly design">
+      <img class="photo contain" src="../images/water-treatment/04.jpg" alt="APSC162 technical drawing of the dispensing assembly">
+    </div>
+    <p>
+      I also wrote the Executive Summary, the Prototype section, the full-scale Water Quality &amp;
+      Quantity analysis, and the team performance review in the team's final report.
     </p>
 
-    <h3>Dispensing Assembly</h3>
+    <h3>System Overview</h3>
     <p>
-      The dispenser was optimized for 3D printability and minimal material usage. Its performance
-      and design efficiency led to it being adopted as the standard example for future classes.
+      A single button press starts the cycle: a centrifugal pump transfers ~250&nbsp;mL of water
+      into the coagulation tank, the dispensing assembly doses the alum, a magnetically-coupled
+      mixing bar agitates it to encourage flocculation, the mixture settles, and a peristaltic pump
+      pushes the clarified water through a sponge/coarse-sand/fine-sand filter stack into a clean
+      water tank -- with turbidity sensors reading before and after. A second button press at any
+      time triggers an immediate emergency stop.
+    </p>
+    <img class="photo contain" src="../images/water-treatment/08.jpg" alt="Full system logic flowchart: color-coded states, actions, LED feedback, and fault halts">
+
+    <h3>Mixing Assembly</h3>
+    <p>
+      Stirring is fully contactless: a 3D-printed mixing bar carrying two neodymium magnets floats
+      in the coagulation tank and spins in phase with magnets on a motor-driven mount below,
+      through a 40:1 worm-gear reduction -- so the tank never needs a shaft seal or a hole that
+      could leak. Teammates Xander Brooks (gearbox) and Skander Haddad-Bouzayen (mixing bar)
+      designed this subsystem.
     </p>
 
-    <h3>Technical Documentation</h3>
+    <h3>Firmware</h3>
     <p>
-      Produced standardized manufacturing drawings for the dispensing assembly.
+      An Arduino runs the whole cycle as a blocking state machine -- start pump (14s timeout) →
+      dispense alum (servo sweep) → mix (3 min, sampling the mixing-tank turbidity sensor every
+      second) → settle (3 min) → peristaltic pump (75s, sampling the clean-tank sensor) -- with an
+      interrupt-driven e-stop button checked throughout every stage that immediately halts all
+      pumps/motors and holds the servo in place.
     </p>
 
-    <h3>Team Leadership</h3>
+    <h3>Testing: What Broke, and the Fixes</h3>
+    <ul>
+      <li><strong>Magnets stalling the mixing motor:</strong> the gearbox-to-bar magnetic coupling was strong enough to pull the drive shaft upward and misalign the gears. Fixed by removing one magnet from the gearbox to cut the attractive force while still mixing reliably.</li>
+      <li><strong>Water reaching the electronics:</strong> a tubing leak let water track along wiring routed under the base. Fixed by tightening connections and rerouting every wire so it never runs directly under a water line.</li>
+      <li><strong>Sand carrying into the clean tank:</strong> filtered water was pulling sand out of the stack. Fixed with a gap between the filter outflow and the sand bed, and by slowing the peristaltic pump.</li>
+      <li><strong>Peristaltic pump not moving water despite being powered:</strong> the pump needed to be primed (pre-filled) before it could draw water.</li>
+    </ul>
     <p>
-      Slow progress and unbalanced team contributions revealed a challenging group dynamic. Took
-      leadership to ensure the success of the mechanical designs and most of the reporting,
-      guaranteeing a functional prototype.
+      After these fixes, the prototype ran three complete cycles with no leaks or failures.
     </p>
+
+    <h3>Results</h3>
+    <p>
+      The prototype brought clean-water turbidity down to <strong>0.246 NTU</strong> -- under Health
+      Canada's 0.3&nbsp;NTU drinking-water guideline -- from source water spiked with bentonite clay
+      up to 1252 NTU in testing. A simple model (turbidity dropping log-linearly with mixing time,
+      and decreasing with more alum) matched the experimental trend well enough to lock in the
+      final recipe: 3 minutes of mixing, 0.8&nbsp;g of alum per 250&nbsp;mL cycle.
+    </p>
+
+    <h3>Full-Scale Design</h3>
+    <p>
+      Scaling the prototype (a ~42,500x linear scale factor) to serve a community of ~1,577 people
+      sizes to a 17,000&nbsp;L coagulation tank producing an estimated 10,000&nbsp;L of usable water
+      per ~45-minute cycle -- 4 cycles covers the community's projected daily demand with room for
+      maintenance downtime. Alum consumption scales to about 6.4&nbsp;kg/day across a 153-day
+      operating season, or roughly <strong>$600/year</strong> in shipping cost. The tanks are sited
+      outside the existing pumphouse (it has no spare floor space) without blocking the winter
+      intake standpipes.
+    </p>
+    <img class="photo contain" src="../images/water-treatment/07.jpg" alt="Full-scale site plan and subsystem flow diagram: dirty water tank through centrifugal pump, mixing tank, peristaltic pump, filter stack, to clearwell">
 
     <h3>Gallery</h3>
     <div class="gallery">
-      <img class="photo" src="../images/water-treatment/02.jpg" alt="Photograph of the final dispensing prototype">
+      <img class="photo" src="../images/water-treatment/02.jpg" alt="Earlier-phase photograph of the dispensing prototype">
       <img class="photo" src="../images/water-treatment/01.jpg" alt="Photograph of the dispensing unit close-up">
-      <img class="photo" src="../images/water-treatment/03.jpg" alt="Rendering of the dispenser model">
       <img class="photo" src="../images/water-treatment/05.jpg" alt="Standardized manufacturing drawing for the dispensing assembly">
     </div>
   </div>
