@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HERSHEY — Autonomous Mars Sample-Retrieval Rover — Gavin Bayley</title>
+<title>Autonomous LiDAR SLAM Rover — Gavin Bayley</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../style.css?v=3">
+<link rel="stylesheet" href="../style.css?v=7">
 </head>
 <body>
 
@@ -27,9 +27,8 @@
   <a class="back-link" href="../index.html#projects">← Back to portfolio</a>
 
   <div class="detail-head">
-    <span class="badge">Confirm your specific role</span>
-    <h1>HERSHEY — Autonomous Mars Sample-Retrieval Rover</h1>
-    <div class="meta">MREN 203 Team Design Project (Team SMORES: Sabina Siddiqui, Gavin Bayley, Nourhan Jadallah) -- Winter 2026</div>
+    <h1>Autonomous LiDAR SLAM Rover</h1>
+    <div class="meta">MREN 203 Design Project - Winter 2026</div>
     <div class="tags">
       <span class="tag">ROS 2 Humble</span><span class="tag">Nav2</span><span class="tag">SLAM Toolbox</span>
       <span class="tag">LiDAR</span><span class="tag">Raspberry Pi</span><span class="tag">Arduino</span>
@@ -41,10 +40,9 @@
 
   <div class="detail-body">
     <p>
-      A team design project for a fictional client (Up Goers Ltd.) framed around a real mission
-      concept: retrieving the sample tubes cached by the Curiosity and Perseverance rovers at Mars'
-      Three Forks depot. As Team SMORES (Sustained Mars Operations &amp; Robotic Exploration
-      Systems), we designed and built HERSHEY, a 4-wheel-drive rover meant to autonomously
+      
+      
+      A team design project  a 4-wheel-drive rover meant to autonomously
       navigate to the depot, locate sample tubes with onboard vision, and retrieve them with a
       dedicated collection arm -- built and demonstrated as a working prototype on a Lynxmotion
       chassis rather than flight hardware.
@@ -62,7 +60,7 @@
       image recognition. The two communicate over a serial bridge; a Foxglove Studio HMI connects
       wirelessly to the Pi's ROS 2 network for remote telemetry, visualization, and manual override.
     </p>
-    <img class="photo contain" src="../images/slam-robot/10.jpg" alt="Team-drawn hardware system overview: Arduino, IMU, motor controller, encoders, Pi, LiDAR, battery, Foxglove HMI">
+    <img class="photo" src="../images/slam-robot/10.jpg" alt="Team-drawn hardware system overview: Arduino, IMU, motor controller, encoders, Pi, LiDAR, battery, Foxglove HMI">
 
     <h3>Chassis &amp; Locomotion</h3>
     <p>
@@ -80,7 +78,7 @@
       drawn up for the swap (SHARP IR sensors, quadrature encoders, dual motor driver, IMU over
       I2C).
     </p>
-    <img class="photo contain" src="../images/slam-robot/06.jpg" alt="ESP32-S3 dev board wired to an external 9DOF IMU breakout, on the bench">
+    <img class="photo" src="../images/slam-robot/06.jpg" alt="ESP32-S3 dev board wired to an external 9DOF IMU breakout, on the bench">
 
     <h3>Motor Controller</h3>
     <p>
@@ -91,7 +89,7 @@
       pulses at minimum-viable PWM) below the DC motors' stall voltage, where continuous PWM can't
       hold a speed at all.
     </p>
-    <img class="photo contain" src="../images/slam-robot/03.jpg" alt="Team-drawn motor controller flow chart: feedforward + PID + macro-pulsing per wheel">
+    <img class="photo" src="../images/slam-robot/03.jpg" alt="Team-drawn motor controller flow chart: feedforward + PID + macro-pulsing per wheel">
     <p>
       <em>What's actually in the repo right now is the baseline of that design: a working PID loop
       on both linear velocity (averaged from the left/right encoders) and angular velocity (IMU
@@ -110,9 +108,10 @@
       planning (A*) and a local planner for obstacle avoidance, and a Pi Cam feed processed with
       OpenCV handles sample-tube detection on final approach.
     </p>
-    <img class="photo contain" src="../images/slam-robot/02.jpg" alt="HERSHEY's URDF model rendered in RViz">
-    <img class="photo contain" src="../images/slam-robot/11.jpg" alt="Team-drawn software module diagram: Pi ROS 2 nodes, Arduino modules, HMI">
+    <img class="photo" src="../images/slam-robot/02.jpg" alt="HERSHEY's URDF model rendered in RViz">
+    <img class="photo" src="../images/slam-robot/11.jpg" alt="Team-drawn software module diagram: Pi ROS 2 nodes, Arduino modules, HMI">
 
+    <h3>ROS 2 Node Graphs</h3>
     <div class="diagram-wrap">
       <svg class="diagram" viewBox="0 0 950 530" width="950" height="530" xmlns="http://www.w3.org/2000/svg">
         <defs>
@@ -168,37 +167,21 @@
         <text class="dg-text-accent" x="895" y="300" transform="rotate(90 895 300)" text-anchor="middle">/cmd_vel (planned)</text>
         <text class="dg-text-dim" x="450" y="524" text-anchor="middle" font-style="italic">Dashed = next milestone, not yet closing the loop</text>
       </svg>
-      <div class="dcaption">ROS 2 node graph, redrawn from the team's architecture -- perception/mapping pipeline is live; Nav2 is next.</div>
     </div>
+
+    <h3>ROS 2 Nodes List</h3>
 
     <div class="tech-table-wrap">
       <table class="tech-table">
         <tr><th>Node</th><th>Publishes</th><th>Subscribes</th><th>Role</th></tr>
-        <tr><td>SLidar Node</td><td class="mono">/scan</td><td>-- (raw serial)</td><td>Formats LiDAR range/angle stream into sensor_msgs/LaserScan</td></tr>
+        <tr><td>SLidar Node</td><td class="mono">/scan</td><td>--</td><td>Formats LiDAR range/angle stream into sensor_msgs/LaserScan</td></tr>
         <tr><td>Arduino Bridge</td><td class="mono">/odom, /imu_data, /joint_states, tf</td><td>Arduino serial stream</td><td>Parses hardware data, republishes as ROS 2 topics, broadcasts odom-&gt;base_link</td></tr>
         <tr><td>Robot State Publisher</td><td class="mono">/tf</td><td>/joint_states, URDF</td><td>Computes exact 3D pose of every link from the kinematic tree</td></tr>
         <tr><td>SLAM Toolbox</td><td class="mono">/map, tf (map-&gt;odom)</td><td>/scan, /odom, /tf</td><td>Builds the 2D occupancy grid, corrects odometry drift</td></tr>
         <tr><td>Foxglove Bridge</td><td class="mono">WebSocket</td><td>/scan, /odom, /tf, /joint_states, /map</td><td>Serializes the whole state for remote visualization</td></tr>
-        <tr><td>Nav2 <em>(planned)</em></td><td class="mono">/cmd_vel</td><td>/map, /scan, /odom, /tf</td><td>Global (A*) + local planning to close the autonomy loop</td></tr>
+        <tr><td>Nav2 <em></em></td><td class="mono">/cmd_vel</td><td>/map, /scan, /odom, /tf</td><td>Global (A*) + local planning to close the autonomy loop</td></tr>
       </table>
     </div>
-
-    <h3>Sample Collection Mechanism</h3>
-    <p>
-      A 2-DOF robotic arm mounted to the chassis tilts down up to 90 degrees to reach the ground,
-      ending in a servo-driven gripper: two 3D-printed jaws opened and closed by a pair of 20-tooth
-      spur gears turning in opposite directions. Sized against NASA's published sample-tube
-      dimensions (15-18 cm long, ~1.5 cm radius), the gripper closes to a ~23 mm radius to secure
-      the tube from its edges without needing precise centering.
-    </p>
-    <div class="gallery">
-      <img class="photo contain" src="../images/slam-robot/07.jpg" alt="Hand sketch of the robotic arm concept mounted to the rover body">
-      <img class="photo contain" src="../images/slam-robot/08.jpg" alt="Annotated CAD sketch of the gripper: spur gears, clamp support, holding plate">
-    </div>
-    <p style="margin-top:16px;">
-      <img class="photo" src="../images/slam-robot/09.jpg" alt="NASA/JPL reference photo of an actual Mars sample tube on the surface, used to size the gripper" style="max-width:360px;">
-    </p>
-    <div class="dcaption" style="text-align:left;">NASA/JPL reference photo (not our footage) of a real Perseverance-cached sample tube -- used to size the gripper geometry.</div>
 
     <h3>Human-Machine Interface</h3>
     <p>
@@ -212,37 +195,6 @@
       <img class="photo" src="../images/slam-robot/04.jpg" alt="Foxglove Studio dashboard: live LiDAR scan, SLAM map, and IMU data panel">
       <img class="photo" src="../images/slam-robot/05.jpg" alt="Foxglove 3D panel showing the completed SLAM occupancy map, photographed live off the monitor">
     </div>
-
-    <h3>Systems Engineering: Regulatory &amp; Cost Framing</h3>
-    <p>
-      Beyond the robot itself, the project scoped HERSHEY against real constraints a Mars mission
-      would face: the 1967 Outer Space Treaty and NASA planetary-protection rules for forward/backward
-      contamination, alignment with UN Sustainable Development Goals #12 and #13, NASA's hardware
-      quality-assurance lifecycle requirements, and a cost-benefit comparison between the prototype's
-      off-the-shelf components (Arduino, RPLIDAR, SHARP sensors) and their flight-grade equivalents
-      (radiation-hardened processors, fiber-optic IMUs, spectrometer-based sensing).
-    </p>
-
-    <h3>Custom PCB</h3>
-    <p>
-      <em>Partially resolved -- the repo's PCB folder has a Fritzing wiring diagram and ESP32
-      pinout for the exploration branch above (sensors + dual motor driver + IMU), but that's a
-      point-to-point wiring layout, not a fabricated custom PCB. The Conceptual Design Report also
-      references a separate "sample collection breakout board" that the Arduino talks to alongside
-      the motor driver -- I still don't have specifics on that board. If it's a real board, let me
-      know what's on it.</em>
-    </p>
-
-    <h3>Status</h3>
-    <p>
-      Confirmed from the team's own Foxglove capture (screenshots and photos above, dated into
-      late March): the ROS 2 Humble workspace, URDF model, and SLAM Toolbox mapping pipeline
-      (fused from LiDAR + Arduino odometry/IMU data) are live and building real occupancy maps. The
-      baseline PID motor controller, sensor suite, and Pi-Arduino serial bridge are implemented.
-      Nav2 integration for full closed-loop autonomous navigation, the feedforward/macro-pulsing
-      upgrade to the motor controller, the sample collection arm's electromechanical build, and
-      onboard image recognition are the next milestones.
-    </p>
   </div>
 
   <div class="detail-nav">

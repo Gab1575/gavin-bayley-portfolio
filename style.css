@@ -229,40 +229,51 @@ section:first-of-type { border-top: none; }
   margin-top: 18px;
 }
 
-/* ---------- real photos ---------- */
+/* ---------- real photos ----------
+   Standalone images (not hero/gallery) fill the column width at their
+   own natural aspect ratio -- one free dimension (height:auto), so this
+   can never crop or distort.
+   Hero/gallery/card-thumb sit in a fixed-size box instead, because a
+   box needs BOTH dimensions definite for object-fit to size an image
+   inside it correctly -- width:100% plus only a max-height (both meant
+   to stay flexible) doesn't reliably cross-solve for the other side and
+   can silently distort the image. object-fit:contain here guarantees
+   no cropping and no distortion; the trade-off is some letterboxing for
+   images whose aspect ratio is far from the box's, which beats both of
+   the alternatives. */
 .photo {
   display: block;
   width: 100%;
+  height: auto;
   border-radius: 8px;
   border: 1px solid var(--border);
-  object-fit: cover;
-  background: var(--bg-elevated);
 }
 
 .photo.hero {
-  aspect-ratio: 16 / 10;
-  margin-top: 18px;
+  width: 100%;
+  height: 480px;
+  object-fit: contain;
+  background: var(--bg-elevated);
+  margin: 18px 0 0;
 }
 
 .gallery .photo {
-  aspect-ratio: 4 / 3;
-  margin-top: 0;
+  width: 100%;
+  height: 320px;
+  object-fit: contain;
+  background: var(--bg-elevated);
+  margin: 0;
 }
 
 .card-thumb {
+  display: block;
   width: 100%;
-  aspect-ratio: 16 / 10;
-  object-fit: cover;
-  border-radius: 6px;
-  margin-bottom: 10px;
-  border: 1px solid var(--border);
-}
-
-/* for tall/portrait renders on a plain white background: show the whole
-   image instead of cropping it under a landscape aspect box */
-.photo.contain, .card-thumb.contain {
+  height: 190px;
   object-fit: contain;
-  background: #fff;
+  background: var(--bg-elevated);
+  margin: 0 0 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
 }
 
 /* ---------- project grid ---------- */
@@ -498,6 +509,7 @@ footer a { color: var(--text-dim); }
   grid-template-columns: repeat(2, 1fr);
   gap: 14px;
   margin-top: 16px;
+  align-items: start;
 }
 
 @media (max-width: 700px) {
@@ -584,6 +596,8 @@ footer a { color: var(--text-dim); }
 
 /* ---------- embedded video ---------- */
 video.photo {
+  width: 100%;
+  max-height: none;
   aspect-ratio: 16 / 9;
   object-fit: contain;
   background: #000;
