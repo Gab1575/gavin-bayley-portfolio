@@ -65,39 +65,19 @@
     <h3>Chassis &amp; Locomotion</h3>
     <p>
       Built on a Lynxmotion A4WD1 kit: four fixed wheels driven by 12V DC planetary gear motors in
-      a skid-steer configuration, steered by driving the left and right sides at different
-      velocities -- feeding directly into the controller's differential-drive kinematics.
+      a skid-steer configuration.
     </p>
-
-    <h3>Hardware Exploration: ESP32 Migration</h3>
-    <p>
-      In parallel with the Arduino Uno WiFi Rev2 build (the version actually committed as the
-      project's <code>platformio.ini</code> target), the team wired up and tested an ESP32-S3 dev
-      board with an external Adafruit LSM6DSOX + LIS3MDL 9DOF IMU, aiming for micro-ROS support,
-      more GPIO, and a faster clock than the Uno's 16&nbsp;MHz. A full pinout/wiring diagram was
-      drawn up for the swap (SHARP IR sensors, quadrature encoders, dual motor driver, IMU over
-      I2C).
-    </p>
-    <img class="photo" src="../images/slam-robot/06.jpg" alt="ESP32-S3 dev board wired to an external 9DOF IMU breakout, on the bench">
 
     <h3>Motor Controller</h3>
     <p>
       The designed motor controller (below) takes target linear/angular velocity and turns it into
       left/right PWM through an acceleration limiter, a PID correction on yaw rate (from the IMU),
       differential-drive kinematics, and a per-wheel hybrid controller blending a feedforward
-      lookup table with PID correction from encoder feedback -- switching to macro-pulsing (short
+      lookup table with PID correction from encoder feedback - switching to macro-pulsing (short
       pulses at minimum-viable PWM) below the DC motors' stall voltage, where continuous PWM can't
       hold a speed at all.
     </p>
     <img class="photo" src="../images/slam-robot/03.jpg" alt="Team-drawn motor controller flow chart: feedforward + PID + macro-pulsing per wheel">
-    <p>
-      <em>What's actually in the repo right now is the baseline of that design: a working PID loop
-      on both linear velocity (averaged from the left/right encoders) and angular velocity (IMU
-      yaw), with integral windup guards, feeding a differential-drive mix into the H-bridge. The
-      feedforward lookup table and macro-pulsing stage in the diagram above are the documented next
-      step -- I don't have confirmation of whether they made it into the final build before demo
-      day. Flagging this rather than claiming more than I can verify from the code.</em>
-    </p>
 
     <h3>Perception, SLAM &amp; Navigation</h3>
     <p>
