@@ -36,16 +36,11 @@
     </div>
   </div>
 
-  <img class="photo hero" src="../images/slam-robot/01.jpg" alt="HERSHEY driving across a hardwood floor, live">
+  <img class="photo hero" src="../images/slam-robot/01.jpg" alt="Autonomous LiDAR rover driving across a hardwood floor, live">
 
   <div class="detail-body">
     <p>
-      
-      
-      A team design project  a 4-wheel-drive rover meant to autonomously
-      navigate to the depot, locate sample tubes with onboard vision, and retrieve them with a
-      dedicated collection arm -- built and demonstrated as a working prototype on a Lynxmotion
-      chassis rather than flight hardware.
+      Engineered as a comprehensive mechatronics design project, this 4-wheel-drive autonomous rover was developed to perform 2D Simultaneous Localization and Mapping (SLAM) and dynamic path planning in unknown environments. Built and demonstrated as a working prototype on a Lynxmotion chassis, the system integrates LiDAR scanning, sensor fusion, and a distributed ROS 2 architecture to achieve real-time autonomous navigation and computer vision-based object detection.
     </p>
 
     <h3>Demo</h3>
@@ -55,12 +50,12 @@
 
     <h3>System Architecture</h3>
     <p>
-      HERSHEY splits compute across two layers: an Arduino Uno handles hard real-time sensor
+      The platform distributes compute across two layers: an Arduino Uno handles hard real-time sensor
       reading and motor control, while a Raspberry Pi 4 runs ROS 2 Humble for SLAM, navigation, and
       image recognition. The two communicate over a serial bridge; a Foxglove Studio HMI connects
       wirelessly to the Pi's ROS 2 network for remote telemetry, visualization, and manual override.
     </p>
-    <img class="photo" src="../images/slam-robot/10.jpg" alt="Team-drawn hardware system overview: Arduino, IMU, motor controller, encoders, Pi, LiDAR, battery, Foxglove HMI">
+    <img class="photo" src="../images/slam-robot/10.jpg" alt="Hardware system overview: Arduino, IMU, motor controller, encoders, Pi, LiDAR, battery, Foxglove HMI">
 
     <h3>Chassis &amp; Locomotion</h3>
     <p>
@@ -70,26 +65,34 @@
 
     <h3>Motor Controller</h3>
     <p>
-      The designed motor controller (below) takes target linear/angular velocity and turns it into
-      left/right PWM through an acceleration limiter, a PID correction on yaw rate (from the IMU),
-      differential-drive kinematics, and a per-wheel hybrid controller blending a feedforward
-      lookup table with PID correction from encoder feedback - switching to macro-pulsing (short
-      pulses at minimum-viable PWM) below the DC motors' stall voltage, where continuous PWM can't
-      hold a speed at all.
+      The custom-designed motor controller translates target linear and angular velocities into left and right PWM signals through a multi-stage process:
+      
+    <ol>
+    <li><strong>Input Conditioning:</strong> The system receives target linear and angular velocities. The linear velocity 
+      passes through an acceleration limiter, while the angular velocity is corrected by a PID controller using feedback from the IMU Gyro Z sensor.</li>
+    <li><strong>Differential Kinematics:</strong> The updated linear and angular velocities are processed through a kinematics 
+      model to calculate the specific target speeds required for the left and right wheels.</li>
+    <li><strong>Hybrid Wheel Control:</strong> Independent controllers process the target speeds for the left and right wheels. 
+      Each controller determines the required PWM signal by combining a baseline estimate from a feedforward lookup table with active PID corrections based on encoder feedback.</li>
+    <li><strong>Output Generation:</strong> The calculated PWM for each wheel is checked against a minimum threshold. If it 
+      exceeds this minimum, the system outputs a continuous drive signal. Below the DC motors' stall voltage, it switches to a macro-pulse strategy (short pulses at a minimum-viable PWM) to maintain lower speeds accurately.</li>
+    </ol>
+
+    This process is outlined in the block diagram below.
     </p>
-    <img class="photo" src="../images/slam-robot/03.jpg" alt="Team-drawn motor controller flow chart: feedforward + PID + macro-pulsing per wheel">
+    <img class="photo" src="../images/slam-robot/03.jpg" alt="Motor controller flow chart: feedforward + PID + macro-pulsing per wheel">
 
     <h3>Perception, SLAM &amp; Navigation</h3>
     <p>
-      A Slamtec LiDAR publishes 2D range data to <code>/scan</code>; a URDF model of the rover
+      A Slamtec RPLiDAR publishes 2D range data to <code>/scan</code>; a URDF model of the rover
       defines the physical/kinematic tree so every sensor reading is correctly positioned relative
-      to the chassis. SLAM Toolbox fuses the LiDAR scans with wheel odometry and IMU data to build
+      to the chassis. SLAM Toolbox fuses the LiDAR scans with wheel odometry and IMU data via an EKF node to build
       a 2D occupancy grid map while correcting for odometry drift. Nav2 provides global path
-      planning (A*) and a local planner for obstacle avoidance, and a Pi Cam feed processed with
-      OpenCV handles sample-tube detection on final approach.
+      planning (A*) and a local planner for dynamic obstacle avoidance, while a Pi Cam feed processed with
+      OpenCV handles localized object detection routines.
     </p>
-    <img class="photo" src="../images/slam-robot/02.jpg" alt="HERSHEY's URDF model rendered in RViz">
-    <img class="photo" src="../images/slam-robot/11.jpg" alt="Team-drawn software module diagram: Pi ROS 2 nodes, Arduino modules, HMI">
+    <img class="photo" src="../images/slam-robot/02.jpg" alt="The rover's URDF model rendered in RViz">
+    <img class="photo" src="../images/slam-robot/11.jpg" alt="Software module diagram: Pi ROS 2 nodes, Arduino modules, HMI">
 
     <h3>ROS 2 Node Graphs</h3>
     <div class="diagram-wrap">
