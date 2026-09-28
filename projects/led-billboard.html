@@ -36,14 +36,15 @@
     </div>
   </div>
 
-  <div class="placeholder-img large">[ Hero photo: the assembled 10-panel wall, powered on ]</div>
+  <img class="photo hero" src="../images/led-billboard/13.jpg" alt="The wall powered on at night, displaying an uploaded image over WiFi">
 
   <div class="detail-body">
     <p>
       Building a 10-panel (2 wide x 5 tall) P5 HUB75 LED wall driven by a single ESP32-S3, with the
       goal of an interactive world map whose countries and flight paths can be recolored and
       animated live from a phone or laptop over WiFi. The project is being built in explicit stages,
-      each one verified before the next is built on top of it.
+      each one verified before the next is built on top of it, and firmware boots into one of a few
+      distinct modes depending on what stage that verification is at.
     </p>
 
     <h3>Signal Integrity at 10 Panels</h3>
@@ -52,9 +53,20 @@
       signal-margin problem, not a config bug: panel edges would pick up a ghosted tint from a
       different panel's color further down the chain. Fixed by dropping the HUB75 I2S clock
       (HZ_16M -> HZ_10M) and maxing out the library's latch-blanking window -- the two changes
-      only fully resolved it together. The README also calls out a 74HCT245 level shifter as the
-      standard fix if ghosting reappears as the chain gets longer.
+      only fully resolved it together. The custom PCB (below) also carries 3 logic-level-shifter
+      ICs as the standard fix if ghosting reappears with a longer chain.
     </p>
+    <div class="gallery">
+      <img class="photo" src="../images/led-billboard/11.jpg" alt="Ghosting artifact: panel edges bleeding a tinted copy of a neighboring panel's colors">
+      <video class="photo" controls preload="metadata" poster="../images/led-billboard/v-calibration-poster.jpg">
+        <source src="../images/led-billboard/v-calibration.mp4" type="video/mp4">
+      </video>
+    </div>
+    <p>
+      After the fix: a clean chain-scan test (each panel showing its own number with no bleed),
+      then a full-wall color wash with no banding.
+    </p>
+    <img class="photo" src="../images/led-billboard/12.jpg" alt="Full wall showing a clean blue-to-red gradient with no ghosting after the signal integrity fix">
 
     <h3>Power Distribution</h3>
     <p>
@@ -63,15 +75,54 @@
       injection point at that current would show up as visible brightness droop and ground-offset
       noise on the panels furthest from the supply.
     </p>
+    <div class="gallery">
+      <img class="photo" src="../images/led-billboard/06.jpg" alt="All 10 panels laid out with power and ribbon-cable wiring being run between them">
+      <img class="photo" src="../images/led-billboard/10.jpg" alt="The back of the fully wired panel array, ribbon cables and power leads run to every injection point">
+    </div>
+
+    <h3>Frame &amp; Mounting</h3>
+    <p>
+      Panels are held in a flat, rigid 2x5 grid by custom 3D-printed corner brackets -- each one
+      spans the join between up to four adjacent panels, screwed into the panels' existing mounting
+      holes, so the wall has no separate backing sheet or enclosure holding it together.
+    </p>
+    <div class="gallery">
+      <img class="photo" src="../images/led-billboard/07.jpg" alt="Attaching a 3D-printed corner bracket to a panel edge">
+      <img class="photo" src="../images/led-billboard/08.jpg" alt="Close-up of a cross-shaped corner bracket joining four panel corners">
+    </div>
 
     <h3>Custom PCB</h3>
     <p>
-      <em>Placeholder -- I don't have details on the custom board yet. Fill in: what it does (power
-      distribution / level shifting / both?), how many panels or injection points it feeds, and
-      any design files or photos to add here.</em>
+      The "10 RGB LED Panel Controller" does two jobs at once: power distribution and signal
+      buffering. Ten fused (5A) and individually capacitor-decoupled channels feed 5V/GND to the
+      panel injection points off one 40A main input, and three SN74HCT245 octal bus transceivers
+      buffer the HUB75 data/clock/latch/OE lines out of the ESP32-S3 before they reach the chain --
+      the level-shifting fix referenced above. Now on schematic revision v12.
+    </p>
+    <div class="gallery">
+      <img class="photo" src="../images/led-billboard/01.jpg" alt="The assembled custom PCB in hand: ESP32-S3, 10 fused power channels, and 3 level-shifter ICs">
+      <img class="photo" src="../images/led-billboard/05.jpg" alt="3D rendered CAD view of the 10 RGB LED Panel Controller board">
+      <img class="photo" src="../images/led-billboard/02.jpg" alt="Schematic sheet showing the 3 SN74HCT245 logic level shifters wired to the ESP32-S3">
+      <img class="photo" src="../images/led-billboard/03.jpg" alt="PCB layout, top copper layer, showing the 10 fused power channels">
+      <img class="photo" src="../images/led-billboard/04.jpg" alt="PCB layout, bottom copper layer">
+    </div>
+
+    <h3>Operating Modes</h3>
+    <p>
+      The firmware boots into exactly one mode, selected at compile time by a flag in
+      <code>panel_config.h</code> -- there's no runtime mode switch, so re-flashing is how the wall
+      changes what it does. Three modes exist so far, roughly in the order they were built.
     </p>
 
-    <h3>Wireless Control: Image &amp; GIF Upload</h3>
+    <h3>Mode: Chain Scan (Diagnostics)</h3>
+    <p>
+      <code>CHAIN_SCAN_MODE</code> is the bring-up/calibration mode used to find the panel chain
+      order, rotation, and signal settings from scratch -- it's what generated the numbered-panel
+      and ghosting-test photos above. Not a day-to-day mode; only used when re-deriving signal
+      settings after a hardware change (more panels, longer cable runs, a new board).
+    </p>
+
+    <h3>Mode: WiFi Image &amp; GIF Upload</h3>
     <p>
       Built a WiFi upload server ahead of the original map-first roadmap. All image/GIF decoding
       happens in the browser, not on the ESP32 -- Canvas 2D for static images, and a hand-written
@@ -132,19 +183,40 @@
       <div class="dcaption">Upload path (write) and render path (read) run as separate FreeRTOS tasks sharing one PSRAM buffer.</div>
     </div>
 
+    <h3>Mode: Dashboard (Time / Weather / Calendar)</h3>
+    <p>
+      <code>DASHBOARD_MODE</code> is the newest mode, and a deliberate change in approach from image
+      upload: it's fully on-device, with no companion browser or server involved at runtime. On
+      boot the wall connects to WiFi, syncs time over NTP, and then runs its own periodic HTTPS
+      fetches -- weather and a calendar feed -- parsing and drawing everything itself. An earlier
+      idea of rotating between several pages (weather, photos, reminders) was dropped in favor of
+      one combined 160x128 layout: time and date across the top, weather and a moon-phase/sunset
+      readout in the middle, and the next calendar event along the bottom.
+    </p>
+    <p>
+      A few non-obvious pieces: the calendar feed is parsed streaming, line-by-line, directly off
+      the HTTPS response (not buffered into memory first), since a personal Google Calendar feed can
+      span years of events and RFC5545 line-folding has to be unwound by hand either way. Weather
+      comes from Open-Meteo, chosen specifically because it needs no API key. The moon-phase icon is
+      a cheap painter's-algorithm trick -- two overlapping circles offset horizontally by the
+      illumination fraction -- rather than a true terminator shape, and sunset time comes from the
+      classic public-domain Sunrise/Sunset Algorithm, computed on-device with no network call.
+    </p>
+    <div class="placeholder-img large">[ Photos coming: the dashboard mode running on the wall ]</div>
+
     <h3>Status</h3>
     <p>
       Display bring-up and per-panel chain/rotation calibration are complete and confirmed working
-      across all 10 panels. WiFi image and GIF upload are live. The original map-specific goals --
-      country coloring and animated flight paths -- are still ahead.
+      across all 10 panels. WiFi image/GIF upload and the standalone dashboard mode are both live
+      (the wall runs one or the other, per the compile-time flag above). The original map-specific
+      goals -- country coloring and animated flight paths -- are still ahead.
     </p>
 
     <h3>Gallery</h3>
     <div class="gallery">
-      <div class="placeholder-img">[ Add photo: full wall powered on ]</div>
-      <div class="placeholder-img">[ Add photo: custom PCB ]</div>
-      <div class="placeholder-img">[ Add photo: wiring / power injection points ]</div>
-      <div class="placeholder-img">[ Add screenshot: WiFi upload page ]</div>
+      <img class="photo" src="../images/led-billboard/09.jpg" alt="Clean chain-scan test: each panel showing its own number with no ghosting">
+      <img class="photo" src="../images/led-billboard/14.jpg" alt="Diagonal geometry test pattern used to check alignment and rotation across the chain">
+      <img class="photo" src="../images/led-billboard/15.jpg" alt="The back of a larger test panel layout used while working out chaining and connectors">
     </div>
   </div>
 
