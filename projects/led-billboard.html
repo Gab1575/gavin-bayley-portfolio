@@ -56,12 +56,9 @@
       only fully resolved it together. The custom PCB (below) also carries 3 logic-level-shifter
       ICs as the standard fix if ghosting reappears with a longer chain.
     </p>
-    <div class="gallery">
-      <img class="photo" src="../images/led-billboard/11.jpg" alt="Ghosting artifact: panel edges bleeding a tinted copy of a neighboring panel's colors">
-      <video class="photo" controls preload="metadata" poster="../images/led-billboard/v-calibration-poster.jpg">
-        <source src="../images/led-billboard/v-calibration.mp4" type="video/mp4">
-      </video>
-    </div>
+    <video class="photo" controls preload="metadata" poster="../images/led-billboard/v-calibration-poster.jpg">
+      <source src="../images/led-billboard/v-calibration.mp4" type="video/mp4">
+    </video>
     <p>
       After the fix: a clean chain-scan test (each panel showing its own number with no bleed),
       then a full-wall color wash with no banding.
@@ -134,6 +131,12 @@
       that same buffer from a different task -- without the mutex that's a real use-after-free, not
       just a visual glitch.
     </p>
+    <div class="gallery">
+      <img class="photo" src="../images/led-billboard/18.jpg" alt="A GIF uploaded over WiFi displaying on the wall at night">
+      <video class="photo" controls preload="metadata" poster="../images/led-billboard/v-upload-demo-poster.jpg">
+        <source src="../images/led-billboard/v-upload-demo.mp4" type="video/mp4">
+      </video>
+    </div>
 
     <div class="diagram-wrap">
       <svg class="diagram" viewBox="0 0 950 420" width="950" height="420" xmlns="http://www.w3.org/2000/svg">
@@ -202,14 +205,23 @@
       illumination fraction -- rather than a true terminator shape, and sunset time comes from the
       classic public-domain Sunrise/Sunset Algorithm, computed on-device with no network call.
     </p>
-    <div class="placeholder-img large">[ Photos coming: the dashboard mode running on the wall ]</div>
+    <img class="photo" src="../images/led-billboard/17.jpg" alt="Dashboard mode running on the wall: time and date top band, weather and sunset middle band, next calendar event on the bottom">
+
+    <h3>Additional Display: Live Stock Ticker</h3>
+    <p>
+      A second on-device screen, shown alongside dashboard mode: a 3x2 grid of tracked tickers,
+      each with the current price, percent change with an up/down indicator, and a small sparkline
+      of recent price movement.
+    </p>
+    <img class="photo" src="../images/led-billboard/16.jpg" alt="Stock ticker display: a 3x2 grid of tickers with price, percent change, and a sparkline chart each">
 
     <h3>Status</h3>
     <p>
       Display bring-up and per-panel chain/rotation calibration are complete and confirmed working
-      across all 10 panels. WiFi image/GIF upload and the standalone dashboard mode are both live
-      (the wall runs one or the other, per the compile-time flag above). The original map-specific
-      goals -- country coloring and animated flight paths -- are still ahead.
+      across all 10 panels. WiFi image/GIF upload and the standalone dashboard mode -- including its
+      stock ticker screen -- are both live (the wall runs one or the other, per the compile-time flag
+      above). The original map-specific goals -- country coloring and animated flight paths -- are
+      still ahead.
     </p>
 
     <h3>Gallery</h3>
