@@ -201,6 +201,17 @@ section:first-of-type { border-top: none; }
   margin: 2px 0 14px;
 }
 
+.feature-card .card-thumb {
+  height: 300px;
+  margin-bottom: 16px;
+}
+
+.featured-grid {
+  display: grid;
+  gap: 20px;
+  margin-top: 18px;
+}
+
 .feature-card h3 {
   margin: 0;
   font-size: 1.25rem;

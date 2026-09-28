@@ -16,7 +16,7 @@
   <nav class="wrap">
     <a class="brand" href="#top">Gavin Bayley</a>
     <div class="navlinks">
-      <a href="#research">Research</a>
+      <a href="#research">Featured</a>
       <a href="#projects">Projects</a>
       <a href="#skills">Skills</a>
       <a href="#contact">Contact</a>
@@ -37,40 +37,87 @@
     </p>
     <div class="hero-links">
       <a class="btn primary" href="mailto:gavin.bayley@queensu.ca">Email</a>
-      <a class="btn" href="#">GitHub <!-- TODO: add your GitHub URL --></a>
-      <a class="btn" href="#">LinkedIn <!-- TODO: add your LinkedIn URL --></a>
+      <a class="btn" href="https://www.linkedin.com/in/gavin-bayley-289363338/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
       <a class="btn" href="GavinBayley_Resume.pdf">Resume (PDF)</a>
     </div>
   </section>
 
-  <!-- ================= RESEARCH ================= -->
+  <!-- ================= FEATURED PROJECTS ================= -->
   <section id="research">
     <div class="section-head">
-      <div class="kicker">Featured Research</div>
-      <h2>LLM-Driven Mental Health Companion Robot</h2>
+      <div class="kicker">Featured Projects</div>
+      <h2>Selected Work</h2>
     </div>
 
-    <a class="feature-card-link" href="projects/flower-robot.html">
-      <div class="feature-card">
-        <img class="card-thumb" src="images/flower-robot/10.jpg" alt="The fully assembled flower robot, powered on, in the lab">
-        <h3>Undergraduate Research Assistant — MITHRIL Lab</h3>
-        <div class="meta">Ingenuity Labs Research Institute, Queen's University · Supervised by Prof. Matthew Pan · May – Aug 2026</div>
+    <div class="featured-grid">
 
-        <p>
-          Designed, fabricated, and programmed a tendon-driven, continuum-stem animatronic flower
-          robot from the ground up, serving as the physical embodiment for an LLM-driven mental
-          health companion research platform in the lab's Human-Robot Interaction research program.
-        </p>
+      <a class="feature-card-link" href="projects/flower-robot.html">
+        <div class="feature-card">
+          <img class="card-thumb" src="images/flower-robot/10.jpg" alt="The fully assembled flower robot, powered on, in the lab">
+          <h3>Undergraduate Research Assistant — MITHRIL Lab</h3>
+          <div class="meta">Ingenuity Labs Research Institute, Queen's University · Supervised by Prof. Matthew Pan · May – Aug 2026</div>
 
-        <div class="tags">
-          <span class="tag">ROS 2</span><span class="tag">micro-ROS</span><span class="tag">ESP32 / C++</span>
-          <span class="tag">Python</span><span class="tag">OpenCV</span><span class="tag">Fusion 360</span>
-          <span class="tag">Tkinter</span><span class="tag">Human-Robot Interaction</span>
+          <p>
+            Designed, fabricated, and programmed a tendon-driven, continuum-stem animatronic flower
+            robot from the ground up, serving as the physical embodiment for an LLM-driven mental
+            health companion research platform in the lab's Human-Robot Interaction research program.
+          </p>
+
+          <div class="tags">
+            <span class="tag">ROS 2</span><span class="tag">micro-ROS</span><span class="tag">ESP32 / C++</span>
+            <span class="tag">Python</span><span class="tag">OpenCV</span><span class="tag">Fusion 360</span>
+            <span class="tag">Tkinter</span><span class="tag">Human-Robot Interaction</span>
+          </div>
+
+          <div class="view-link">Read the full case study <span class="arrow">→</span></div>
         </div>
+      </a>
 
-        <div class="view-link">Read the full case study <span class="arrow">→</span></div>
-      </div>
-    </a>
+      <a class="feature-card-link" href="projects/car-restoration.html">
+        <div class="feature-card">
+          <img class="card-thumb" src="images/car-restoration/mercedes/41.jpg" alt="Rolls-Royce and Mercedes parked side by side under a parking garage at night">
+          <h3>Vehicle Restorations</h3>
+          <div class="meta">1973 Mercedes 450SL &amp; 1976 Rolls-Royce Silver Shadow · 2022 – 2025</div>
+
+          <p>
+            Multi-year restoration of two classic cars left exposed to the elements for 30+ years.
+            Full electrical fault-finding against factory wiring diagrams, a K-Jetronic fuel system
+            rebuild, a bare-metal strip and repaint, and a complete teardown and rebuild of the
+            Rolls-Royce's high-pressure hydraulic braking and suspension system.
+          </p>
+
+          <div class="tags">
+            <span class="tag">Electrical Diagnostics</span><span class="tag">Hydraulics</span>
+            <span class="tag">Fusion 360</span><span class="tag">Mechanical Overhaul</span>
+            <span class="tag">Bodywork &amp; Refinishing</span>
+          </div>
+
+          <div class="view-link">Read the full case study <span class="arrow">→</span></div>
+        </div>
+      </a>
+
+      <a class="feature-card-link" href="projects/slam-robot.html">
+        <div class="feature-card">
+          <img class="card-thumb" src="images/slam-robot/01.jpg" alt="Autonomous LiDAR SLAM Rover driving across a hardwood floor, live">
+          <h3>Autonomous LiDAR SLAM Rover</h3>
+          <div class="meta">MREN 203 Team Project · 3-Person Team · Winter 2026</div>
+
+          <p>
+            Autonomous 4WD rover built around a simulated Mars sample-retrieval mission — LiDAR SLAM
+            with SLAM Toolbox and Nav2 for mapping and navigation, a custom PID motor controller
+            running on a Raspberry Pi, and live telemetry over Foxglove.
+          </p>
+
+          <div class="tags">
+            <span class="tag">ROS 2 Humble</span><span class="tag">Nav2</span><span class="tag">SLAM Toolbox</span>
+            <span class="tag">LiDAR</span><span class="tag">Raspberry Pi</span><span class="tag">PID Control</span>
+          </div>
+
+          <div class="view-link">Read the full case study <span class="arrow">→</span></div>
+        </div>
+      </a>
+
+    </div>
 
     <div class="feature-card" style="margin-top:18px;">
       <span class="badge">Upcoming — Oct. 2026</span>
@@ -313,8 +360,7 @@
     <p>
       <a href="mailto:gavin.bayley@queensu.ca">gavin.bayley@queensu.ca</a>
       &nbsp;·&nbsp; Kingston, ON / Victoria, BC
-      &nbsp;·&nbsp; <a href="#"><!-- TODO: GitHub link -->GitHub</a>
-      &nbsp;·&nbsp; <a href="#"><!-- TODO: LinkedIn link -->LinkedIn</a>
+      &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/gavin-bayley-289363338/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
     </p>
   </footer>
 
