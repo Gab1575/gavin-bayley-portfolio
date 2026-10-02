@@ -42,10 +42,9 @@
   <div class="detail-body">
     <p>
       Designed, fabricated, and programmed a tendon-driven, continuum-stem animatronic flower
-      robot from the ground up -- the physical embodiment for an LLM-driven mental health
-      companion research platform in the lab's Human-Robot Interaction research program. The robot
-      communicates non-verbally through petal color, petal-angle motion, and a dual-stage
-      continuum-style stem, with no anthropomorphic face or voice.
+      robot from the ground up. This project acts as the physical embodiment for an LLM-driven mental health
+      companion research platform. The robot communicates non-verbally through petal color, petal-angle motion, and a dual-stage
+      continuum-style stem, with no face or voice.
     </p>
 
     <h3>Demo</h3>
@@ -56,71 +55,17 @@
     <h3>Mechanical Design</h3>
     <p>
       CAD in Fusion 360, laser-cut acrylic subframes, and 3D-printed structural parts. The stem is
-      a dual-stage tendon-driven continuum mechanism -- a stack of ball-and-socket joints strung
-      with four tendons -- that bends smoothly rather than pivoting at discrete joints. The five-petal
+      a dual-stage tendon-driven continuum mechanism; a stack of ball-and-socket joints strung
+      with four tendons that bends smoothly rather than pivoting at discrete joints. The five-petal
       head carries its own independently addressable LED array and is driven off the stem by a
       geared N20 motor with an encoder-based position loop.
     </p>
-
-    <h3>Development Iterations</h3>
-    <p>
-      The current red-pot, 10-spool design went through several rounds of rebuilding. The very
-      first bring-up was a single servo and an ESP32 breakout screwed to a scrap acrylic disc,
-      just confirming the servo driver and firmware could move one joint before any petals
-      existed. From there the earliest full prototype (July 2026) proved out the petal LEDs and
-      tendon stem on a bare acrylic head with no real enclosure -- cycling through colors to
-      confirm the addressable LEDs and servo wiring worked before any of the fabrication was
-      finalized. That same week the head briefly sat on a different clear-disc base with exposed
-      cylindrical mounts before the pot design was settled.
-    </p>
-    <div class="gallery">
-      <img class="photo" src="../images/flower-robot/dev/14.jpg" alt="First electronics bring-up: a single servo and ESP32 breakout on a scrap acrylic disc">
-      <img class="photo" src="../images/flower-robot/dev/01.jpg" alt="Earliest working prototype: bare translucent petals on an exposed wiring rig">
-      <img class="photo" src="../images/flower-robot/dev/02.jpg" alt="Early prototype, front view, petals lit blue">
-      <img class="photo" src="../images/flower-robot/dev/03.jpg" alt="Early prototype, angled view showing the bare head assembly">
-      <img class="photo" src="../images/flower-robot/dev/04.jpg" alt="Early prototype from a different angle, showing the exposed tendon stem">
-      <img class="photo" src="../images/flower-robot/dev/15.jpg" alt="Same early prototype on a different clear-disc base, petals lit purple">
-      <video class="photo" controls preload="metadata" poster="../images/flower-robot/dev/v-early-poster.jpg">
-        <source src="../images/flower-robot/dev/v-early.mp4" type="video/mp4">
-      </video>
-    </div>
-    <p>
-      By August the pot had become a 3D-printed red enclosure and the electronics moved onto a
-      dedicated plate -- around the same time, a separate acrylic-tube test rig was used to
-      validate the tendon-spool kinematics in isolation, driven from a small GUI with per-servo
-      sliders before that motion logic was folded into the final build.
-    </p>
-    <div class="gallery">
-      <img class="photo" src="../images/flower-robot/dev/05.jpg" alt="Red pot iteration on the lab bench, debugging the servo resting routine in Claude Code">
-      <img class="photo" src="../images/flower-robot/dev/06.jpg" alt="Red pot iteration, same debugging session, wider shot">
-      <img class="photo" src="../images/flower-robot/dev/07.jpg" alt="Fusion 360 iteration of the plate and full assembly, version 13">
-      <img class="photo" src="../images/flower-robot/dev/08.jpg" alt="Electronics plate assembly on a cutting mat">
-      <video class="photo" controls preload="metadata" poster="../images/flower-robot/dev/v-kinematics1-poster.jpg">
-        <source src="../images/flower-robot/dev/v-kinematics1.mp4" type="video/mp4">
-      </video>
-      <video class="photo" controls preload="metadata" poster="../images/flower-robot/dev/v-kinematics2-poster.jpg">
-        <source src="../images/flower-robot/dev/v-kinematics2.mp4" type="video/mp4">
-      </video>
-    </div>
-    <p>
-      Close-up shots of the current internals, with the outer pot removed: the head's servo horns
-      and the two 3D-printed marker balls used by the vision nodes, the ten tendon spools around
-      the stem's base, and the ESP32/PCA9685 stack wired into the electronics plate.
-    </p>
-    <div class="gallery">
-      <img class="photo" src="../images/flower-robot/dev/09.jpg" alt="Close-up of the flower head center: servo horns, tendon anchors, and the two vision marker balls">
-      <img class="photo" src="../images/flower-robot/dev/10.jpg" alt="The ten tendon spools and pulley assembly inside the pot, with the stem base and a camera module">
-      <img class="photo" src="../images/flower-robot/dev/11.jpg" alt="Electronics plate held in hand, showing the ESP32, PCA9685, and connector wiring">
-      <img class="photo" src="../images/flower-robot/dev/12.jpg" alt="Close-up of the PCA9685 servo driver terminals and wiring">
-      <img class="photo" src="../images/flower-robot/dev/13.jpg" alt="ESP32 and PCA9685 wired into the electronics plate">
-    </div>
 
     <h3>ROS 2 Node Graph</h3>
     <p>
       The host stack is a mode-aware pipeline: the GUI and the kinematic solver both feed
       <code>flower_mux</code>, which is the only node allowed to publish the final command the
-      hardware actually receives -- and it's careful to keep the GUI's LED/motor state intact even
-      while kinematic mode is driving the servos. Vision runs as two fully independent nodes that
+      hardware actually receives. Vision runs as two fully independent nodes that
       aren't wired into control yet.
     </p>
     <div class="diagram-wrap">
@@ -221,7 +166,7 @@
     <h3>Guided Breathing Routines</h3>
     <p>
       Beyond manual and LLM-driven control, the GUI ships pre-programmed guided routines (e.g. box
-      breathing) that animate petals and color through a fixed rhythm on their own -- a direct link
+      breathing) that animate petals and color through a fixed rhythm on their own. A direct link
       between the robot's movement vocabulary and the mental health use case it's built around.
     </p>
 
@@ -236,8 +181,52 @@
       <a class="btn" href="../images/flower-robot/LLM4MentalHealth_Documentation.pdf">Full Documentation (PDF)</a>
     </p>
 
+    <h3>Lessons Learned</h3>
+    <ul>
+      <li><strong>Self-directed project management:</strong> I owned the build end to end: mechanical design, electronics, 
+        firmware, the ROS 2 stack, and documentation while making most of the design decisions behind it. With no one handing 
+        out tasks, I had to scope the work myself, break it into milestones, and decide what mattered most each week: when to 
+        push a subsystem forward, when to stop and fix a weak link, and when "good enough" was the right call so the rest of 
+        the system could keep moving. </li>
+      <li><strong>Designing around constraints you can't eliminate:</strong> The tendons were the hardest part of the 
+        build. Under sustained tension they plastically deform and stretch over time, friction through the distribution plates and ball-and-socket 
+        stack eats into the force that actually reaches the stem, and servos holding a load build up heat. Adjustable, serviceable tensioning for each tendon instead of fixed 
+        anchors alongside optimized tendon routing and ball bearings elimiting friction from all bends aided. Furthermore, eased motion that avoids shock-loading the tendons
+        provided further stability. </li>
+      <li><strong>Rapid prototyping mindset:</strong> The robot went through countless physical iterations.
+         Each one was built quickly to answer a specific question, tested on the bench, and then either discarded or folded into the next. 
+         Getting real hardware in hand early surfaced problems that CAD never would have, and made each iteration noticeably better than the last.</li>
+      <li><strong>Building a tendon-driven continuum robot:</strong> Unlike a conventional arm with discrete joints, a 
+        continuum stem bends smoothly along its length, so its behavior depends on tendon routing, tension balance, and 
+        the stiffness of the whole stack. Learning to describe each stage's bend as a (theta, phi) pair, map it onto 
+        antagonistic servo pairs, and then reconcile that model with what the real, imperfect hardware actually did 
+        was one a challenging part of the project.</li>
+      <li><strong>Integrating many moving parts:</strong> The robot only works when everything works together. Fabricated parts, 
+        tendons and servos, petal LEDs, the N20 motor, ESP32 firmware, the micro-ROS link over Wi-Fi, the ROS 2 node graph and the GUI. 
+        A fault in one layer often showed up as a symptom in another, so I learned to  define clean interfaces between subsystems (e.g. making <code>flower_mux</code> 
+        the single source of truth for hardware commands), and debug across the full stack.</li>
+    </ul>
+
+    <h3>Project Continuation: Capstone</h3>
+    <p>
+      The platform now continues beyond my term as a capstone project for a team of fourth-year
+      engineering students. The team is designing and modelling a set of expressive behaviors, each tied to a
+      specific emotion that combine petal motion, color, and stem gestures. Together these
+      behaviors will form a library for the robot's API and LLM to draw from, so the language model
+      can choose how the flower expresses itself in response to a user.
+    </p>
+
     <h3>Gallery</h3>
+    <p>Latest Iteration:</p>
     <div class="gallery">
+      <video class="photo" controls preload="metadata" poster="../images/flower-robot/dev/v-kinematics1-poster.jpg">
+        <source src="../images/flower-robot/dev/v-kinematics1.mp4" type="video/mp4">
+      </video>
+      <video class="photo" controls preload="metadata" poster="../images/flower-robot/dev/v-kinematics2-poster.jpg">
+        <source src="../images/flower-robot/dev/v-kinematics2.mp4" type="video/mp4">
+      </video>
+      <img class="photo" src="../images/flower-robot/dev/10.jpg" alt="The ten tendon spools and pulley assembly inside the pot, with the stem base and a camera module">
+      <img class="photo" src="../images/flower-robot/dev/11.jpg" alt="Electronics plate held in hand, showing the ESP32, PCA9685, and connector wiring">
       <img class="photo" src="../images/flower-robot/11.jpg" alt="Real tendon-driven servo plate, held in hand, during assembly">
       <img class="photo" src="../images/flower-robot/01.jpg" alt="Full-assembly rendering in Fusion 360">
       <img class="photo" src="../images/flower-robot/02.jpg" alt="The five-petal flower head assembly">
@@ -248,6 +237,23 @@
       <img class="photo" src="../images/flower-robot/07.jpg" alt="Tendon tensioning mechanism on the electronics plate">
       <img class="photo" src="../images/flower-robot/08.jpg" alt="The outer flower pot assembly">
       <img class="photo" src="../images/flower-robot/09.jpg" alt="Internal bearing and plate assembly">
+      <img class="photo" src="../images/flower-robot/dev/09.jpg" alt="Close-up of the flower head center: servo horns, tendon anchors, and the two vision marker balls">
+    </div>
+
+    <p>Previous Iterations:</p>
+    <div class="gallery">
+      <img class="photo" src="../images/flower-robot/dev/14.jpg" alt="First electronics bring-up: a single servo and ESP32 breakout on a scrap acrylic disc">
+      <img class="photo" src="../images/flower-robot/dev/01.jpg" alt="Earliest working prototype: bare translucent petals on an exposed wiring rig">
+      <img class="photo" src="../images/flower-robot/dev/02.jpg" alt="Early prototype, front view, petals lit blue">
+      <img class="photo" src="../images/flower-robot/dev/03.jpg" alt="Early prototype, angled view showing the bare head assembly">
+      <img class="photo" src="../images/flower-robot/dev/04.jpg" alt="Early prototype from a different angle, showing the exposed tendon stem">
+      <img class="photo" src="../images/flower-robot/dev/15.jpg" alt="Same early prototype on a different clear-disc base, petals lit purple">
+      <video class="photo" controls preload="metadata" poster="../images/flower-robot/dev/v-early-poster.jpg">
+        <source src="../images/flower-robot/dev/v-early.mp4" type="video/mp4">
+      </video>
+      <img class="photo" src="../images/flower-robot/dev/05.jpg" alt="Red pot iteration on the lab bench, debugging the servo resting routine in Claude Code">
+      <img class="photo" src="../images/flower-robot/dev/06.jpg" alt="Red pot iteration, same debugging session, wider shot">
+      <img class="photo" src="../images/flower-robot/dev/08.jpg" alt="Electronics plate assembly on a cutting mat">
     </div>
   </div>
 
